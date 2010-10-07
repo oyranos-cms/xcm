@@ -13,12 +13,30 @@
 #include <string.h>                    /* strcmp() */
 #include <X11/Xcm/XcmEvents.h>
 
+#include "config.h"
+
+#ifdef HAVE_OY
+#include <alpha/oyranos_alpha.h>
+void * fromMD5                       ( const void        * md5_hash,
+                                       size_t            * size,
+                                       void              *(allocate_func)(size_t) );
+char * getName                       ( const void        * data,
+                                       size_t              size,
+                                       void              *(allocate_func)(size_t),
+                                       int                 file_name );
+#endif
+
 int main(int argc, char *argv[])
 {
   const char * display_name = getenv("DISPLAY");
 
   if(argc > 2 && strcmp(argv[1],"-display") == 0)
     display_name = argv[2];
+
+#ifdef HAVE_OY
+  XcmICCprofileFromMD5FuncSet( fromMD5 );
+  XcmICCprofileGetNameFuncSet( getName );
+#endif
 
   XcmeContext_s * c = XcmeContext_Create( display_name );
 
@@ -34,3 +52,38 @@ int main(int argc, char *argv[])
   return 0;
 }
 
+#ifdef HAVE_OY
+void * fromMD5                       ( const void        * md5_hash,
+                                       size_t            * size,
+                                       void              *(allocate_func)(size_t) )
+{
+  void * data = 0;
+  oyProfile_s * p = oyProfile_FromMD5( (uint32_t*)md5_hash, 0 );
+  data = oyProfile_GetMem( p, size, 0, allocate_func );
+  oyProfile_Release( &p );
+  return data;
+}
+
+char * getName                       ( const void        * data,
+                                       size_t              size,
+                                       void              *(allocate_func)(size_t),
+                                       int                 file_name )
+{
+  char * text = 0;
+  const char * t = 0;
+  oyProfile_s * p = oyProfile_FromMem( size, (void*)data, 0, 0 );
+  if(file_name)
+    t = oyProfile_GetFileName( p, -1 );
+  else
+    t = oyProfile_GetText( p, oyNAME_DESCRIPTION );
+
+  if(t && t[0])
+  {
+    text = (char*)allocate_func( strlen(t) + 1 );
+    strcpy( text, t );
+  }
+
+  oyProfile_Release( &p );
+  return text;
+}
+#endif
