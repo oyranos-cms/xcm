@@ -1,0 +1,73 @@
+Summary:        X Color Management tools
+Name:           xcm
+License:        MIT
+Group:          System Environment/Tools
+URL:            http://www.oyranos.org
+Vendor:         Kai-Uwe Behrmann
+#BuildArch: %{_arch}
+#%ifos linux
+#%endif 
+BuildRoot: %{_tmppath}/%{name}-root
+Prefix:    %{_prefix}
+
+
+%if 0%{?suse_version} > 0
+BuildRequires:     gcc-c++ gettext pkgconfig    xorg-x11-Mesa xorg-x11-Mesa-devel doxygen
+%endif
+%if 0%{?suse_version} > 910
+#BuildRequires: gcc-c++ gettext doxygen fltk-threaded fltk-threaded-devel xorg-x11 xorg-x11-devel xorg-x11-Mesa-devel  pkgconfig libpng-devel libjpeg-devel
+BuildRequires:  bash bind-utils binutils bison bzip2 coreutils cpio cyrus-sasl diffutils e2fsprogs file filesystem findutils gcc gcc-c++ glibc glibc-devel grep groff gzip less make man mktemp patch perl pkgconfig popt readline rpm sed tar timezone unzip util-linux zlib zlib-devel
+%endif
+%if 0%{?suse_version} > 1010
+BuildRequires:  Mesa Mesa-devel gcc-c++ pkgconfig xorg-x11 xorg-x11-devel xorg-x11-libX11 xorg-x11-libX11-devel xorg-x11-libXfixes xorg-x11-libXfixes-devel xorg-x11-libs xorg-x11-util-devel libXcm-devel
+%endif
+%if 0%{?mandriva_version} > 0
+BuildRequires:  Mesa mesagl-devel gcc-c++ pkgconfig doxygen libXcm-devel
+%endif
+%if 0%{?fedora_version} > 0
+BuildRequires:  Mesa Mesa-devel gcc-c++ xorg-x11-devel xorg-x11-Mesa-devel xdg-utils doxygen libXfixes-devel xorg-x11-proto-devel xorg-x11-xtrans-devel libXcm-devel
+
+%endif
+%if 0%{?debian_version} > 0
+BuildRequires: gcc-c++ pkgconfig xorg-x11 xorg-x11-devel xorg-x11-Mesa-devel  xdg-utils doxygen
+%endif
+
+
+%description
+The Xcm tools are colour management helpers for Xorg.
+A EDID parser and a colour management events observer are included.
+
+
+
+%prep
+%setup -n %{name}-%{version}
+
+%build
+%configure --disable-static
+make %{?_smp_mflags}
+
+%install
+make DESTDIR=%{buildroot} install-main
+
+#Remove installed doc
+rm -fr %{buildroot}/%{_datadir}/doc/%{name}
+
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+
+
+%files
+%defattr(-, root, root)
+%{_bindir}/xcmevents
+%{_bindir}/xcmedid
+%doc AUTHORS COPYING ChangeLog README
+
+
+%changelog
+* Thu Oct 07 2010 Kai-Uwe Behrmann
+- install EDID parser tool
+- install xcmsevents tool
+
+

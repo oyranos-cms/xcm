@@ -1,0 +1,22 @@
+Xcm:
+
+    Tools which based on libXcm, a library for colour management on X.
+    xcmedid is for parsing EDID data blocks. 
+    xcmevents observeis X11 colour management events.
+
+
+Internet:
+    sources: git clone git://www.oyranos.org/git/xcm
+    www:     OpenICC http://www.freedesktop.org/wiki/OpenIcc
+    email:   http://lists.freedesktop.org/mailman/listinfo/openicc
+
+
+Dependencies:
+    Xorg www.x.org libXcm
+
+
+Building:
+    $ make
+    $ make install
+
+

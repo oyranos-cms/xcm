@@ -1,0 +1,11 @@
+Source: libXcm
+Package: libXcm
+Priority: optional
+Section: graphics
+Installed-Size: 17104
+Maintainer: Kai-Uwe Behrmann <ku.b@gmx.de>
+Homepage: http://www.oyranos.org
+Depends: libc6, libxfixes
+Description: X Color Management Library
+ The library allowes to assign color regions to windows and
+ manage them.
