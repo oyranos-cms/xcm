@@ -10,11 +10,15 @@
  */
 
 #include <stdlib.h>
+#include <string.h>                    /* strcmp() */
 #include <X11/Xcm/XcmEvents.h>
 
 int main(int argc, char *argv[])
 {
   const char * display_name = getenv("DISPLAY");
+
+  if(argc > 2 && strcmp(argv[1],"-display") == 0)
+    display_name = argv[2];
 
   XcmeContext_s * c = XcmeContext_Create( display_name );
 
