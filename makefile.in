@@ -21,10 +21,10 @@ LIBNAME = $(LIB)$(TARGET).a
 
 
 INCL= -I/usr/include -I$(includedir) -I/usr/X11R6/include -I$(SRCDIR)/include \
-	$(X_H) $(OS_INCL)
+	$(X_H) $(OS_INCL) $(OYRANOS_H)
 
 LDLIBS = $(LDFLAGS) -L$(libdir) -L. \
-	 $(c)
+	 $(OYRANOS_LIBS) $(c)
 
 CHEADERS = 
 CFILES = \

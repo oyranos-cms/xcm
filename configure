@@ -549,7 +549,7 @@ fi
 
 # set some compiler and linker options
 
-if [ `$CC -MM $ROOT_DIR/src/xcmevents/xcmevents.c > test_tmp.txt; cat test_tmp.txt | grep xcmevents.o | wc -l` -gt 0 ]; then
+if [ `$CC -MM $ROOT_DIR/tests/intptr_test.c > test_tmp.txt; cat test_tmp.txt | grep intptr_test.o | wc -l` -gt 0 ]; then
   MAKEDEPEND="$GCC_MM"
 else
   MAKEDEPEND="$echo #"
@@ -692,7 +692,7 @@ if [ -n "$ECHO" ]; then
   DSO_LINKING=1; export DSO_LINKING
   #CUPS=2; export CUPS
   #ELEKTRA=1; export ELEKTRA
-  #OYRANOS=1; export OYRANOS
+  OYRANOS=2; export OYRANOS
   #LCMS=1; export LCMS
   #LRAW=2; export LRAW
   #LIBXML2=1; export LIBXML2
@@ -746,7 +746,7 @@ fi
   OPENMP_LINKING=0; export OPENMP_LINKING
   CUPS=0; export CUPS
   ELEKTRA=0; export ELEKTRA
-  #OYRANOS=0; export OYRANOS
+  OYRANOS=0; export OYRANOS
   LCMS=0; export LCMS
   LRAW=0; export LRAW
   LIBXML2=0; export LIBXML2
