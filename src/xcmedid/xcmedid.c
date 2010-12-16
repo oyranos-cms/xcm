@@ -7,7 +7,7 @@ int main(int argc, char ** argv)
   XCM_EDID_ERROR_e err = XCM_EDID_WRONG_SIGNATURE;
   char * txt = 0;
   FILE * fp = 0;
-  void * mem = 0;
+  char * mem = 0;
   size_t size = 0;
   int s = 0;
 
@@ -25,20 +25,31 @@ int main(int argc, char ** argv)
     {
       fprintf(stderr, "Error: Could not open file - \"%s\"\n", argv[1]);
     }
+  } else
+  {
+    int c;
 
-    if(fp)
-    {
+    mem = malloc(65535);
+    fp = stdin;
+    while(((c = getc(stdin)) != EOF) &&
+          size < 65535)
+      mem[size++] = c;
+  }
+
+  if(mem && size)
+  {
       err = XcmEdidPrintString( mem, &txt, malloc );
       if(err)
-        fprintf(stderr, "Error: %s\n", XcmEdidErrorToString(err));
+        fprintf(stderr, "Error: %s (%d)\n", XcmEdidErrorToString(err), size);
       else
       {
         fprintf(stdout, "%s\n", txt);
         free(txt);
       }
-      fclose (fp);
-    }
   }
+
+  if(fp && fp != stdin)
+    fclose (fp);
 
   if(err)
     fprintf(stderr, "\nUsage:\n\txcmedid EDID.bin\n\n");
