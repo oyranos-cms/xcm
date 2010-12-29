@@ -33,14 +33,14 @@ export CONF_H CONF CONF_TEMP_SH CONF_LOG
 test -f error.tmp && rm error.tmp
 
 VERSION_A=0
-VERSION_B=3
-VERSION_C=1
+VERSION_B=4
+VERSION_C=0
 VERSION_ABI_A=1
 VERSION_ABI_B=0
 RELEASE=0
 START_MONTH=09
 START_YEAR=2010
-DEVEL_MONTH=10 # numeric
+DEVEL_MONTH=12 # numeric
 DEVEL_YEAR=2010
 GIT_MASTER="`cat $ROOT_DIR/.git/refs/heads/master`"
 time="`date +%y%m%d.%H%M%S`"
@@ -782,25 +782,25 @@ test -n "$ECHO" && $ECHO "VERSION_L = $VERSION_L" >> $CONF
 test -n "$ECHO" && $ECHO "RELEASE = $RELEASE" >> $CONF
 test -n "$ECHO" && $ECHO "" >> $CONF
 
-test -n "$ECHO" && $ECHO "#ifndef "$MACRONAME"_VERSION_H" >> $VERS_H
-test -n "$ECHO" && $ECHO "#define "$MACRONAME"_VERSION_H" >> $VERS_H
+test -n "$ECHO" && $ECHO "#ifndef "$MACRO_NAME"_VERSION_H" >> $VERS_H
+test -n "$ECHO" && $ECHO "#define "$MACRO_NAME"_VERSION_H" >> $VERS_H
 test -n "$ECHO" && $ECHO "" >> $VERS_H
-test -n "$ECHO" && $ECHO "#define "$MACRONAME"_VERSION_A $VERSION_A" >> $VERS_H
-test -n "$ECHO" && $ECHO "#define "$MACRONAME"_VERSION_B $VERSION_B" >> $VERS_H
-test -n "$ECHO" && $ECHO "#define "$MACRONAME"_VERSION_C $VERSION_C" >> $VERS_H
-test -n "$ECHO" && $ECHO "#define "$MACRONAME"_VERSION_NAME \"$VERSION\"" >> $VERS_H
-test -n "$ECHO" && $ECHO "#define "$MACRONAME"_VERSION $VERSION_L" >> $VERS_H
-test -n "$ECHO" && $ECHO "#define "$MACRONAME"_START_MONTH $START_MONTH" >> $VERS_H
-test -n "$ECHO" && $ECHO "#define "$MACRONAME"_START_YEAR $START_YEAR" >> $VERS_H
-test -n "$ECHO" && $ECHO "#define "$MACRONAME"_DEVEL_MONTH $DEVEL_MONTH" >> $VERS_H
-test -n "$ECHO" && $ECHO "#define "$MACRONAME"_DEVEL_YEAR $DEVEL_YEAR" >> $VERS_H
-test -n "$ECHO" && $ECHO "#define "$MACRONAME"_CONFIG_DATE \"$time\"" >> $VERS_H
+test -n "$ECHO" && $ECHO "#define "$MACRO_NAME"_VERSION_A $VERSION_A" >> $VERS_H
+test -n "$ECHO" && $ECHO "#define "$MACRO_NAME"_VERSION_B $VERSION_B" >> $VERS_H
+test -n "$ECHO" && $ECHO "#define "$MACRO_NAME"_VERSION_C $VERSION_C" >> $VERS_H
+test -n "$ECHO" && $ECHO "#define "$MACRO_NAME"_VERSION_NAME \"$VERSION\"" >> $VERS_H
+test -n "$ECHO" && $ECHO "#define "$MACRO_NAME"_VERSION $VERSION_L" >> $VERS_H
+test -n "$ECHO" && $ECHO "#define "$MACRO_NAME"_START_MONTH $START_MONTH" >> $VERS_H
+test -n "$ECHO" && $ECHO "#define "$MACRO_NAME"_START_YEAR $START_YEAR" >> $VERS_H
+test -n "$ECHO" && $ECHO "#define "$MACRO_NAME"_DEVEL_MONTH $DEVEL_MONTH" >> $VERS_H
+test -n "$ECHO" && $ECHO "#define "$MACRO_NAME"_DEVEL_YEAR $DEVEL_YEAR" >> $VERS_H
+test -n "$ECHO" && $ECHO "#define "$MACRO_NAME"_CONFIG_DATE \"$time\"" >> $VERS_H
 if [ `echo $GIT_MASTER | grep cat | wc -l` -lt 1 ]; then
-  test -n "$ECHO" && $ECHO "#define "$MACRONAME"_GIT_MASTER \"$GIT_MASTER\"" >> $VERS_H
+  test -n "$ECHO" && $ECHO "#define "$MACRO_NAME"_GIT_MASTER \"$GIT_MASTER\"" >> $VERS_H
 else
-  test -n "$ECHO" && $ECHO "#define "$MACRONAME"_GIT_MASTER """ >> $VERS_H
+  test -n "$ECHO" && $ECHO "#define "$MACRO_NAME"_GIT_MASTER """ >> $VERS_H
 fi
-test -n "$ECHO" && $ECHO "#define "$MACRONAME"_DATE \"$DATE\"" >> $VERS_H
+test -n "$ECHO" && $ECHO "#define "$MACRO_NAME"_DATE \"$DATE\"" >> $VERS_H
 test -n "$ECHO" && $ECHO "" >> $VERS_H
 
 test -n "$RPMECHO" && $RPMECHO "Version:        $VERSION" >> $SPEC
@@ -876,7 +876,7 @@ test -n "$ECHO" && $ECHO "#define "$MACRO_NAME"_SRC_LOCALEDIR  \"$build_dir/po\"
 test -n "$ECHO" && $ECHO "" >> $CONF_H
 test -n "$ECHO" && $ECHO "" >> $VERS_H
 test -n "$ECHO" && $ECHO "" >> $VERS_H
-test -n "$ECHO" && $ECHO "#endif /*"$MACRONAME"_VERSION_H*/" >> $VERS_H
+test -n "$ECHO" && $ECHO "#endif /*"$MACRO_NAME"_VERSION_H*/" >> $VERS_H
 
 CFLAGS="$CFLAGS_COMMON `echo $CFLAGS | $STRIPOPT`"
 CXXFLAGS="$CXXFLAGS_COMMON `echo $CXXFLAGS | $STRIPOPT`"
