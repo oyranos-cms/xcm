@@ -28,6 +28,7 @@ LDLIBS = $(LDFLAGS) -L$(libdir) -L. \
 
 CHEADERS = 
 CFILES = \
+	$(XCMDDC_CFILES) \
 	$(XCMEDID_CFILES) \
 	$(XCMEVENTS_CFILES)
 
@@ -35,6 +36,8 @@ XCMEVENTS_CFILES = \
 	src/$(TARGET_MINI)events/$(TARGET_MINI)events.c
 XCMEDID_CFILES = \
 	src/$(TARGET_MINI)edid/$(TARGET_MINI)edid.c
+XCMDDC_CFILES = \
+	src/$(TARGET_MINI)ddc/$(TARGET_MINI)ddc.c
 
 TEST_CPP = \
 	tests/dl_test.cxx \
@@ -68,10 +71,13 @@ CXXOBJECTS = \
 OBJECTS = $(CPPFILES:.cpp=.o) $(CXXFILES:.cxx=.o) $(CFILES:.c=.o)
 XCMEVENTS_OBJECTS = $(XCMEVENTS_CFILES:.c=.o)
 XCMEDID_OBJECTS = $(XCMEDID_CFILES:.c=.o)
+XCMDDC_OBJECTS = $(XCMDDC_CFILES:.c=.o)
 
 CLEAN_OBJECTS = \
 	$(OBJECTS) \
-	$(XCMEVENTS_CFILES:.c=.o)
+	$(XCMEVENTS_OBJECTS) \
+	$(XCMEDID_OBJECTS) \
+	$(XCMDDC_OBJECTS)
 
 SUB_OBJECTS = \
 	$(CFILES:.c=.o)
@@ -95,7 +101,7 @@ ALL_FILES = \
 
 # build all what is needed to run the libraries, helpers
 all:	config.log.h mkdepend \
-	$(TARGET_MINI)events $(TARGET_MINI)edid
+	$(TARGET_MINI)events $(TARGET_MINI)edid $(TARGET_MINI)ddc
 	echo ... $@ done
 
 # get time stamp
@@ -139,6 +145,12 @@ $(TARGET_MINI)edid:	 $(XCMEDID_OBJECTS)
 	-o $@ $(XCMEDID_OBJECTS) $(m) \
 	-L$(libdir) $(LDLIBS) $(m) $(X11_LIBS)
 
+$(TARGET_MINI)ddc:	 $(XCMDDC_OBJECTS)
+	echo Linking $@ ...
+	$(CC) -I./ $(CFLAGS_) \
+	-o $@ $(XCMDDC_OBJECTS) $(m) \
+	-L$(libdir) $(LDLIBS) $(m) $(X11_LIBS)
+
 check:	all
 	echo current git version is:
 	n=0; for i in `cd $(SRCDIR); git rev-list master`; do if [ $${n} -eq 0 ]; then echo git id:$${i}; fi; n=1; done
@@ -159,6 +171,7 @@ install_bin:	all
 	mkdir -p $(DESTDIR)$(bindir)
 	$(INSTALL) -m 755 $(TARGET_MINI)events $(DESTDIR)$(bindir)
 	$(INSTALL) -m 755 $(TARGET_MINI)edid $(DESTDIR)$(bindir)
+	$(INSTALL) -m 755 $(TARGET_MINI)ddc $(DESTDIR)$(bindir)
 	echo ... binary Installation finished
 
 # install recursive
@@ -219,6 +232,7 @@ uninstall_bin:
 	echo Uninstalling binaries ...
 	$(RM) $(DESTDIR)$(bindir)/$(TARGET_MINI)events
 	$(RM) $(DESTDIR)$(bindir)/$(TARGET_MINI)edid
+	$(RM) $(DESTDIR)$(bindir)/$(TARGET_MINI)ddc
 	echo ... done uninstalling binaries
 	
 uninstall-docs:	uninstall_docu
@@ -356,6 +370,8 @@ copy_files:
 	cd $(SRCDIR) && \
 	  $(COPY) $(XCMEVENTS_CFILES) $(DESTDIR)/src/$(TARGET_MINI)events
 	mkdir -p $(DESTDIR)/src/$(TARGET_MINI)edid
+	cd $(SRCDIR) && \
+	  $(COPY) $(XCMDDC_CFILES) $(DESTDIR)/src/$(TARGET_MINI)ddc
 	cd $(SRCDIR) && \
 	  $(COPY) $(XCMEDID_CFILES) $(DESTDIR)/src/$(TARGET_MINI)edid
 	mkdir -p $(DESTDIR)/tests
