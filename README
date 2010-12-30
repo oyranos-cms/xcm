@@ -1,8 +1,9 @@
 Xcm:
 
     Tools which based on libXcm, a library for colour management on X.
+    xcmddc requests EDID from a monitor over the i2c bus.
     xcmedid is for parsing EDID data blocks. 
-    xcmevents observeis X11 colour management events.
+    xcmevents observes X11 colour management events.
 
 
 Internet:
