@@ -54,7 +54,7 @@ DOKU =  AUTHORS \
         COPYING \
         README
 MAN3_HAND =
-MAN1 =
+MAN1 =  xcmddc.1 xcmedid.1
 MAN3 =  $(MAN3_HAND) $(MAN3_GENERATED)
 
 TOP_SOURCES =
@@ -188,6 +188,9 @@ install-docs:	install_docu
 install_docu:	docu
 	test -d $(DESTDIR)$(docdir) || mkdir -p $(DESTDIR)$(docdir)
 	-cd $(SRCDIR); $(INSTALL) -m 644 $(DOKU) $(DESTDIR)$(docdir)
+	mkdir -p $(DESTDIR)$(mandir)/man1
+	cd $(SRCDIR) && \
+	  $(INSTALL) -m 644 $(MAN1) $(DESTDIR)$(mandir)/man1
 
 docu:
 
@@ -369,9 +372,10 @@ copy_files:
 	mkdir -p $(DESTDIR)/src/$(TARGET_MINI)events
 	cd $(SRCDIR) && \
 	  $(COPY) $(XCMEVENTS_CFILES) $(DESTDIR)/src/$(TARGET_MINI)events
-	mkdir -p $(DESTDIR)/src/$(TARGET_MINI)edid
+	mkdir -p $(DESTDIR)/src/$(TARGET_MINI)ddc
 	cd $(SRCDIR) && \
 	  $(COPY) $(XCMDDC_CFILES) $(DESTDIR)/src/$(TARGET_MINI)ddc
+	mkdir -p $(DESTDIR)/src/$(TARGET_MINI)edid
 	cd $(SRCDIR) && \
 	  $(COPY) $(XCMEDID_CFILES) $(DESTDIR)/src/$(TARGET_MINI)edid
 	mkdir -p $(DESTDIR)/tests

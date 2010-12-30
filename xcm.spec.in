@@ -46,7 +46,7 @@ A EDID parser and a colour management events observer are included.
 make %{?_smp_mflags}
 
 %install
-make DESTDIR=%{buildroot} install-main
+make DESTDIR=%{buildroot} install
 
 #Remove installed doc
 rm -fr %{buildroot}/%{_datadir}/doc/%{name}
@@ -59,12 +59,19 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-, root, root)
-%{_bindir}/xcmevents
-%{_bindir}/xcmedid
+%{_bindir}/%{name}events
+%{_bindir}/%{name}edid
+%{_bindir}/%{name}ddc
+%{_mandir}/man1/%{name}ddc.1*
+%{_mandir}/man1/%{name}edid.1*
 %doc AUTHORS COPYING ChangeLog README
 
 
 %changelog
+* Thu Dec 30 2010 Kai-Uwe Behrmann
+- install EDID from i2c tool
+- install man pages
+
 * Thu Oct 07 2010 Kai-Uwe Behrmann
 - install EDID parser tool
 - install xcmsevents tool
