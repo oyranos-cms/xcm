@@ -33,10 +33,10 @@ void printfHelp(int argc, char ** argv)
   fprintf( stderr, "      %s -l\n",        argv[0]);
   fprintf( stderr, "\n");
   fprintf( stderr, "  %s\n",               _("Dump EDID from i2c:"));
-  fprintf( stderr, "      %s -d positional_number [--force-output]\n", argv[0]);
+  fprintf( stderr, "      %s -d positional_number [--force-output] [--identify]\n", argv[0]);
   fprintf( stderr, "\n");
   fprintf( stderr, "  %s\n",               _("Dump EDID from i2c:"));
-  fprintf( stderr, "      %s --i2c node_name [--force-output]\n",    argv[0]);
+  fprintf( stderr, "      %s --i2c node_name [--force-output] [--identify]\n",    argv[0]);
   fprintf( stderr, "\n");
   fprintf( stderr, "  %s\n",               _("Print a help text:"));
   fprintf( stderr, "      %s -h\n",        argv[0]);
@@ -103,6 +103,7 @@ int main(int argc, char ** argv)
   int device = -1;
   char ** devices = NULL;
   int force_output = 0;
+  int identify = 0;
   int verbose = 0;
   int n = 0;
   const char * i2c_node_name = NULL;
@@ -133,8 +134,10 @@ int main(int argc, char ** argv)
                         {
                              if(OY_IS_ARG("i2c"))
                         { OY_PARSE_STRING_ARG2(i2c_node_name, "i2c"); break; }
-                             if(OY_IS_ARG("force-output"))
+                        else if(OY_IS_ARG("force-output"))
                         { force_output = 1; i=100; break; }
+                        else if(OY_IS_ARG("identify"))
+                        { identify = 1; i=100; break; }
                         }
               default:
                         printfHelp(argc, argv);
@@ -209,11 +212,15 @@ int main(int argc, char ** argv)
           fprintf(stderr, "%s\n", i2c_node_name );
         if(data)
         {
-          fwrite( data, sizeof(char), size, stdout );
+          if(!identify)
+            fwrite( data, sizeof(char), size, stdout );
           free(data); data = 0; size = 0;
         }
         fflush( stdout );
       }
+
+      if(identify != 0)
+        printf( "%d\n", error );
     }
   }
 

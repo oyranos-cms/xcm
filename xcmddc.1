@@ -4,9 +4,9 @@ xcmddc \- monitor EDID fetching over i2c
 .SH SYNOPSIS
 \fBxcmddc\fR [ -l [-v] ]
 .fi 
-\fBxcmddc\fR [ -d \fIPOSITIONAL_NUMBER\fR [--force-output] ]
+\fBxcmddc\fR [ -d \fIPOSITIONAL_NUMBER\fR [--force-output] [--identify] ]
 .fi 
-\fBxcmddc\fR [ --i2c \fINODE_NAME\fR [--force-output] ]
+\fBxcmddc\fR [ --i2c \fINODE_NAME\fR [--force-output] [--identify] ]
 .fi 
 \fBxcmddc\fR [-h]
 .fi 
@@ -26,11 +26,15 @@ The numbering of monitors starts with zero for the first device. To get the
 number of all available devices use "\fBxcmddc\fR -l". The EDID data block is dumped to stdout.
 
 \fB--force-output\fR switch EDID header verificatcationn off.
+
+\fB--identify\fR dump the error code as integer to stdout.
 .TP
 \fB\--i2c\fR=\fINODE_NAME\fR , \fB--i2c\fR \fINODE_NAME\fR
 select the i2c device node file. The EDID data block is dumped to stdout. The --i2c option is much faster than the -d option. This is because of much fewer timeouts reuired for counting the valid i2c device with the -d option.
 
 \fB--force-output\fR switch EDID header verification off.
+
+\fB--identify\fR dump the error code as integer to stdout.
 .SH GENERAL OPTIONS
 .TP
 .B \-v, \-\-verbose
