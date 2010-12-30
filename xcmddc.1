@@ -1,0 +1,70 @@
+.TH xcmddc 1 "December 30, 2010" "User Commands"
+.SH NAME
+xcmddc \- monitor EDID fetching over i2c
+.SH SYNOPSIS
+\fBxcmddc\fR [ -l [-v] ]
+.fi 
+\fBxcmddc\fR [ -d \fIPOSITIONAL_NUMBER\fR [--force-output] ]
+.fi 
+\fBxcmddc\fR [ --i2c \fINODE_NAME\fR [--force-output] ]
+.fi 
+\fBxcmddc\fR [-h]
+.fi 
+.SH DESCRIPTION
+The xcmddc tool fetches a monitors EDID data block over a i2c communication channel.
+.SH OPTIONS
+.TP
+.B \-l
+list devices.
+Only devices which provide a EDID data block and the EDID's header is valid will be counted.
+
+\fB-v\fR show each device by its node name.
+.TP
+.B \-d\fR=\fIPOSITIONAL_NUMBER\fR , \-d\fR \fIPOSITIONAL_NUMBER\fR
+position in device list.
+The numbering of monitors starts with zero for the first device. To get the
+number of all available devices use "\fBxcmddc\fR -l". The EDID data block is dumped to stdout.
+
+\fB--force-output\fR switch EDID header verificatcationn off.
+.TP
+\fB\--i2c\fR=\fINODE_NAME\fR , \fB--i2c\fR \fINODE_NAME\fR
+select the i2c device node file. The EDID data block is dumped to stdout. The --i2c option is much faster than the -d option. This is because of much fewer timeouts reuired for counting the valid i2c device with the -d option.
+
+\fB--force-output\fR switch EDID header verification off.
+.SH GENERAL OPTIONS
+.TP
+.B \-v, \-\-verbose
+increase verbosity
+.SH EXAMPLES 
+.TP
+Count available i2c->monitor devices:
+.B xcmddc -l
+.PP 
+.TP
+List available i2c->monitor devices by name:
+.B xcmddc -lv
+.PP 
+.TP
+Dump EDID from first i2c node:
+.B xcmddc -d 0
+.PP 
+.TP
+Dump EDID by i2c device name:
+.B xcmddc --i2c /dev/i2c-5
+.PP 
+.TP
+Print a help text:
+.B xcmddc -h
+.PP 
+.SH AUTHOR
+Kai-Uwe Behrmann (ku.b (at) gmx.de)
+.SH COPYRIGHT
+(c) 2010, Kai-Uwe Behrmann
+.fi
+License: MIT <http://www.opensource.org/licenses/mit-license.php>
+.SH "SEE ALSO"
+xcmedid(1) xcmevents(1) libXcm(3) XcmDDC(3)
+.fi
+http://www.oyranos.org
+.SH "REPORTING BUGS"
+at: http://sourceforge.net/tracker/?group_id=177017&atid=879553

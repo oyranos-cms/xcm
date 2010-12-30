@@ -1,0 +1,35 @@
+.TH xcmedid 1 "December 30, 2010" "User Commands"
+.SH NAME
+xcmddc \- monitor EDID to key/value dumper
+.SH SYNOPSIS
+\fBxcmedid\fR
+.fi 
+\fBxcmedid\fR \fIEDID_FILE\fR
+.fi 
+.SH DESCRIPTION
+The xcmedid tool converts a edid data block into key/value pairs. The understood keys depend on what is supported by libXcm.
+.SH EXAMPLES 
+.TP
+Show key/value pairs from a stored EDID data block:
+.B xcmedid edid.bin
+.PP 
+.TP
+Fetch EDID over i2c and dump key/value pairs:
+.B xcmddc -d 0 | xcmedid
+.PP 
+.TP
+Fetch EDID over Oyranos and dump key/value pairs:
+.B oyranos-monitor -f edid -d 0 | xcmedid
+.PP 
+.SH AUTHOR
+Kai-Uwe Behrmann (ku.b (at) gmx.de)
+.SH COPYRIGHT
+(c) 2010, Kai-Uwe Behrmann
+.fi
+License: MIT <http://www.opensource.org/licenses/mit-license.php>
+.SH "SEE ALSO"
+xcmddc(1) xcmevents(1) libXcm(3) XcmEdidParse(3)
+.fi
+http://www.oyranos.org
+.SH "REPORTING BUGS"
+at: http://sourceforge.net/tracker/?group_id=177017&atid=879553
