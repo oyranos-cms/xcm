@@ -39,6 +39,12 @@ XCMEDID_CFILES = \
 XCMDDC_CFILES = \
 	src/$(TARGET_MINI)ddc/$(TARGET_MINI)ddc.c
 
+UDEV_RULES = \
+	scripts/90-xcm-i2c.rules
+
+SCRIPT_FILES = \
+	$(UDEV_RULES)
+
 TEST_CPP = \
 	tests/dl_test.cxx \
 	tests/intptr_test.c \
@@ -172,6 +178,7 @@ install_bin:	all
 	$(INSTALL) -m 755 $(TARGET_MINI)events $(DESTDIR)$(bindir)
 	$(INSTALL) -m 755 $(TARGET_MINI)edid $(DESTDIR)$(bindir)
 	$(INSTALL) -m 755 $(TARGET_MINI)ddc $(DESTDIR)$(bindir)
+	-$(INSTALL) -m 644 $(UDEV_RULES) $(DESTDIR)/lib/udev/rules.d/
 	echo ... binary Installation finished
 
 # install recursive
@@ -180,6 +187,9 @@ install:	install-main
 
 install-main:	install_bin install_docu
 
+install_udev:
+	$(INSTALL) -m 755 -d  $(DESTDIR)/lib/udev/rules.d/
+	$(INSTALL) -m 644 $(UDEV_RULES) $(DESTDIR)/lib/udev/rules.d/
 
 # synonymes
 install_doc:	install_docu
@@ -378,6 +388,9 @@ copy_files:
 	mkdir -p $(DESTDIR)/src/$(TARGET_MINI)edid
 	cd $(SRCDIR) && \
 	  $(COPY) $(XCMEDID_CFILES) $(DESTDIR)/src/$(TARGET_MINI)edid
+	mkdir -p $(DESTDIR)/scripts
+	cd $(SRCDIR) && \
+	  $(COPY) $(SCRIPT_FILES) $(DESTDIR)/scripts
 	mkdir -p $(DESTDIR)/tests
 	cd $(SRCDIR) && \
 	  $(COPY) $(TEST_FILES) $(DESTDIR)/tests

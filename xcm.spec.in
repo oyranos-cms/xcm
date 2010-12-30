@@ -47,6 +47,7 @@ make %{?_smp_mflags}
 
 %install
 make DESTDIR=%{buildroot} install
+make DESTDIR=%{buildroot} install_udev
 
 #Remove installed doc
 rm -fr %{buildroot}/%{_datadir}/doc/%{name}
@@ -64,6 +65,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/%{name}ddc
 %{_mandir}/man1/%{name}ddc.1*
 %{_mandir}/man1/%{name}edid.1*
+/lib/udev/rules.d/90-xcm-i2c.rules
 %doc AUTHORS COPYING ChangeLog README
 
 

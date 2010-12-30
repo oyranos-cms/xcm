@@ -1,0 +1,8 @@
+# load the device node kernel module
+SUBSYSTEM=="i2c-adapter", ACTION=="add", RUN+="/sbin/modprobe i2c-dev"
+
+# blindly set group
+KERNEL=="i2c-[0-9]*", ACTION=="add", GROUP="video"
+
+# FIXME: match only DDC devices
+KERNEL=="i2c-[0-9]*", ACTION=="add", PROGRAM=="xcmddc --i2c /dev/%k --identify", RESULT=="0", GROUP="video"
