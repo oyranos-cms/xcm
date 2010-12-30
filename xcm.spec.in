@@ -10,6 +10,7 @@ Vendor:         Kai-Uwe Behrmann
 BuildRoot: %{_tmppath}/%{name}-root
 Prefix:    %{_prefix}
 
+BuildRequires:  udev
 
 %if 0%{?suse_version} > 0
 BuildRequires:     gcc-c++ pkgconfig    xorg-x11-Mesa xorg-x11-Mesa-devel 
