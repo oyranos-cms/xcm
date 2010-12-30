@@ -9,8 +9,13 @@
  *
  */
 #include <X11/Xcm/XcmEdidParse.h>
+#include "xcm_version.h"
 #include <stdio.h>
 #include <stdlib.h>
+
+#ifndef USE_GETTEXT
+#define _(text) text
+#endif
 
 int main(int argc, char ** argv)
 {
@@ -50,7 +55,8 @@ int main(int argc, char ** argv)
   {
       err = XcmEdidPrintString( mem, &txt, malloc );
       if(err)
-        fprintf(stderr, "Error: %s (%d)\n", XcmEdidErrorToString(err), size);
+        fprintf( stderr, "Error: %s (%d)\n",
+                 XcmEdidErrorToString(err), (int)size);
       else
       {
         fprintf(stdout, "%s\n", txt);
@@ -62,7 +68,17 @@ int main(int argc, char ** argv)
     fclose (fp);
 
   if(err)
-    fprintf(stderr, "\nUsage:\n\txcmedid EDID.bin\n\n");
+  {
+  fprintf( stderr, "\n");
+  fprintf( stderr, "%s %s\n",   argv[0],
+                                _("is a EDID parsing tool"));
+  fprintf( stderr, "  Xcm v%s config: %s devel period: %s\n",
+                  XCM_VERSION_NAME,
+                  XCM_CONFIG_DATE, XCM_DATE );
+  fprintf( stderr, "\n");
+  fprintf( stderr, "%s\n",                 _("Usage"));
+  fprintf(stderr, "      %s EDID.bin\n\n", argv[0]);
+  }
 
   return err;
 }
