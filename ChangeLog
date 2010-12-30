@@ -1,3 +1,21 @@
+Version xcm-0.4.0
+
+Kai-Uwe Behrmann (14):
+	* [docu]: update README
+	* [core]: add xcmddc --identify option
+	* [conf]: install and package udev rules
+	* [build]: install and package man pages
+	* [docu]: add xcmddc and xcmedid man pages
+	* [core]: sync help texts of xcmedid and xcmddc
+	* [core]: add --i2c and --force-output to xcmddc
+	* [docu]: fix source file header
+	* [build]: compile xcmddc
+	* [core]; add initial xcmddc tool
+	* [conf]: fix version macro names
+	* [core]: support stdin stream
+	* [build]: fixes for Mandriva RPMs
+	* [conf]: bump version
+
 Xcm-0.3.0
 
 
