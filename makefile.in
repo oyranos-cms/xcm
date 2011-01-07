@@ -178,6 +178,7 @@ install_bin:	all
 	$(INSTALL) -m 755 $(TARGET_MINI)events $(DESTDIR)$(bindir)
 	$(INSTALL) -m 755 $(TARGET_MINI)edid $(DESTDIR)$(bindir)
 	$(INSTALL) -m 755 $(TARGET_MINI)ddc $(DESTDIR)$(bindir)
+	-mkdir -p $(DESTDIR)/lib/udev/rules.d/
 	-$(INSTALL) -m 644 $(UDEV_RULES) $(DESTDIR)/lib/udev/rules.d/
 	echo ... binary Installation finished
 
