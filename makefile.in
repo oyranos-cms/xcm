@@ -6,7 +6,7 @@ RPMARCH = `rpmbuild --showrc | awk '/^build arch/ {print $$4}'`
 MSGCAT = msgcat
 MSGFMT = msgfmt -c --statistics
 
-CFLAGS_=$(CFLAGS) -std=c99 -pedantic
+CFLAGS_=$(CFLAGS) $(XCM_H) -std=c99 -pedantic
 
 docdir          = $(datadir)/doc/$(TARGET)
 SRCDIR          = $(src_dir)
