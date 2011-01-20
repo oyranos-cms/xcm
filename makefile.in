@@ -1,3 +1,6 @@
+#ifndef APPLE
+  TARGET_DDC = $(TARGET)ddc
+#endif
 
 COLLECT = ar cru
 RANLIB = ranlib
@@ -107,7 +110,7 @@ ALL_FILES = \
 
 # build all what is needed to run the libraries, helpers
 all:	config.log.h mkdepend \
-	$(TARGET_MINI)events $(TARGET_MINI)edid $(TARGET_MINI)ddc
+	$(TARGET_MINI)events $(TARGET_MINI)edid $(TARGET_DDC)
 	echo ... $@ done
 
 # get time stamp
@@ -177,7 +180,7 @@ install_bin:	all
 	mkdir -p $(DESTDIR)$(bindir)
 	$(INSTALL) -m 755 $(TARGET_MINI)events $(DESTDIR)$(bindir)
 	$(INSTALL) -m 755 $(TARGET_MINI)edid $(DESTDIR)$(bindir)
-	$(INSTALL) -m 755 $(TARGET_MINI)ddc $(DESTDIR)$(bindir)
+	-$(INSTALL) -m 755 $(TARGET_MINI)ddc $(DESTDIR)$(bindir)
 	-mkdir -p $(DESTDIR)/lib/udev/rules.d/
 	-$(INSTALL) -m 644 $(UDEV_RULES) $(DESTDIR)/lib/udev/rules.d/
 	echo ... binary Installation finished
@@ -249,7 +252,7 @@ uninstall_bin:
 	echo Uninstalling binaries ...
 	$(RM) $(DESTDIR)$(bindir)/$(TARGET_MINI)events
 	$(RM) $(DESTDIR)$(bindir)/$(TARGET_MINI)edid
-	$(RM) $(DESTDIR)$(bindir)/$(TARGET_MINI)ddc
+	-$(RM) $(DESTDIR)$(bindir)/$(TARGET_MINI)ddc
 	echo ... done uninstalling binaries
 	
 uninstall-docs:	uninstall_docu
