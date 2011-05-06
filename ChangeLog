@@ -1,3 +1,21 @@
+Version xcm-0.4.1
+
+Kai-Uwe Behrmann (10):
+	* [build]: rpm group is System/Libraries
+	* [build]: disable ddc on apple
+	* [build]: add XCM_H flags
+	* [build]: compress package with bzip2
+	* [conf]: sync test script with Oyranos
+	* [conf]: use -fPIC only on 64bit builds
+	* [conf]: bump version
+	* [conf]: use SUBSYTEM="i2c"
+	* [build]: add udev to build requirements
+	* [docu]: update ChangeLog
+
+Nicolas Chauvet (2):
+	* [conf]: apply Fedora patch for pkg-config
+	* [build]: ensure the target directory for udev
+
 Version xcm-0.4.0
 
 Kai-Uwe Behrmann (14):
