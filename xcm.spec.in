@@ -1,7 +1,7 @@
 Summary:        X Color Management tools
 Name:           xcm
 License:        MIT
-Group:          System Environment/Tools
+Group:          System/Tools
 URL:            http://www.oyranos.org
 Vendor:         Kai-Uwe Behrmann
 #BuildArch: %{_arch}
