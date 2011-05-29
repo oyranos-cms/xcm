@@ -1,4 +1,4 @@
-#ifndef APPLE
+#ifdef LINUX
   TARGET_DDC = $(TARGET)ddc
 #endif
 
