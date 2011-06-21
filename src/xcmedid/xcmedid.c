@@ -12,6 +12,7 @@
 #include "xcm_version.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #ifndef USE_GETTEXT
 #define _(text) text
@@ -25,10 +26,18 @@ int main(int argc, char ** argv)
   char * mem = 0;
   size_t size = 0;
   int s = 0;
+  int min_args = 1;
+  int print_openicc_json = 0;
 
-  if(argc > 1)
+  if(argc > min_args)
   {
-    fp = fopen(argv[1],"rb");
+    if(strcmp( argv[min_args], "--openicc" ) == 0)
+    {
+      print_openicc_json = 1;
+      ++min_args;
+    }
+
+    fp = fopen(argv[min_args],"rb");
     if(fp)
     {
       fseek(fp,0L,SEEK_END); 
@@ -38,7 +47,7 @@ int main(int argc, char ** argv)
       s = fread(mem, sizeof(char), size, fp);
     } else
     {
-      fprintf(stderr, "Error: Could not open file - \"%s\"\n", argv[1]);
+      fprintf(stderr, "Error: Could not open file - \"%s\"\n", argv[min_args]);
     }
   } else
   {
@@ -53,7 +62,11 @@ int main(int argc, char ** argv)
 
   if(mem && size)
   {
+    if(print_openicc_json)
+      err = XcmEdidPrintOpenIccJSON( mem, &txt, malloc );
+    else
       err = XcmEdidPrintString( mem, &txt, malloc );
+
       if(err)
         fprintf( stderr, "Error: %s (%d)\n",
                  XcmEdidErrorToString(err), (int)size);
