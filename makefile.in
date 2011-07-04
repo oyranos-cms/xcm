@@ -63,7 +63,7 @@ DOKU =  AUTHORS \
         COPYING \
         README
 MAN3_HAND =
-MAN1 =  xcmddc.1 xcmedid.1
+MAN1 =  xcmddc.1 xcmedid.1 xcmevents.1
 MAN3 =  $(MAN3_HAND) $(MAN3_GENERATED)
 
 TOP_SOURCES =
