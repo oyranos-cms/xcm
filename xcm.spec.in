@@ -1,12 +1,9 @@
 Summary:        X Color Management tools
 Name:           xcm
 License:        MIT
-Group:          System/Tools
+Group:          System/X11/Utilities
 URL:            http://www.oyranos.org
 Vendor:         Kai-Uwe Behrmann
-#BuildArch: %{_arch}
-#%ifos linux
-#%endif 
 BuildRoot: %{_tmppath}/%{name}-root
 Prefix:    %{_prefix}
 
@@ -66,6 +63,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/%{name}ddc
 %{_mandir}/man1/%{name}ddc.1*
 %{_mandir}/man1/%{name}edid.1*
+%{_mandir}/man1/%{name}events.1*
 /lib/udev/rules.d/90-xcm-i2c.rules
 %doc AUTHORS COPYING ChangeLog README
 
