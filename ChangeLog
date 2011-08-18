@@ -1,3 +1,13 @@
+Version xcm-0.4.2
+
+Kai-Uwe Behrmann (6):
+	* [docu]: man page minor fixes
+	* [build]: switch to bz2 compression for RPM
+	* [docu]: add xcmevents man page
+	* [core]: add JSON from EDID output
+	* [core]: we support DDC only on Linux
+	* [conf]: bump version
+
 Version xcm-0.4.1
 
 Kai-Uwe Behrmann (10):
