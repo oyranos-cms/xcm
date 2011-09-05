@@ -41,7 +41,7 @@ A EDID parser and a colour management events observer are included.
 
 
 %prep
-%setup -p
+%setup -q
 
 %build
 export CFLAGS="%{optflags}"
