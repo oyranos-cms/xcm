@@ -7,7 +7,7 @@
  *  @par Copyright:
  *             (c) 2011 - Kai-Uwe Behrmann <ku.b@gmx.de>
  *
- *  gcc -Wall -g -I../.. xcmwindow.c -o xcmwindow `pkg-config --cflags --libs x11 xcm`
+ *  gcc -Wall -g -I../.. xcmwindow.c -o xcmwindow `pkg-config --cflags --libs x11 xcm oyranos`
  */
 
 #include <X11/Xcm/Xcm.h>
@@ -21,6 +21,19 @@
 
 #ifndef USE_GETTEXT
 #define _(text) text
+#endif
+
+#include "config.h"
+
+#ifdef HAVE_OY
+#include <alpha/oyranos_alpha.h>
+void * fromMD5                       ( const void        * md5_hash,
+                                       size_t            * size,
+                                       void              *(allocate_func)(size_t) );
+char * getName                       ( const void        * data,
+                                       size_t              size,
+                                       void              *(allocate_func)(size_t),
+                                       int                 file_name );
 #endif
 
 void printfHelp(int argc, char ** argv)
@@ -176,6 +189,11 @@ int main(int argc, char ** argv)
                         exit (0);
   }
 
+#ifdef HAVE_OY
+  XcmICCprofileFromMD5FuncSet( fromMD5 );
+  XcmICCprofileGetNameFuncSet( getName );
+#endif
+
   dpy = XOpenDisplay( display );
   if(!dpy)
   {
@@ -258,3 +276,38 @@ int main(int argc, char ** argv)
 
 
 
+#ifdef HAVE_OY
+void * fromMD5                       ( const void        * md5_hash,
+                                       size_t            * size,
+                                       void              *(allocate_func)(size_t) )
+{
+  void * data = 0;
+  oyProfile_s * p = oyProfile_FromMD5( (uint32_t*)md5_hash, 0 );
+  data = oyProfile_GetMem( p, size, 0, allocate_func );
+  oyProfile_Release( &p );
+  return data;
+}
+
+char * getName                       ( const void        * data,
+                                       size_t              size,
+                                       void              *(allocate_func)(size_t),
+                                       int                 file_name )
+{
+  char * text = 0;
+  const char * t = 0;
+  oyProfile_s * p = oyProfile_FromMem( size, (void*)data, 0, 0 );
+  if(file_name)
+    t = oyProfile_GetFileName( p, -1 );
+  else
+    t = oyProfile_GetText( p, oyNAME_DESCRIPTION );
+
+  if(t && t[0])
+  {
+    text = (char*)allocate_func( strlen(t) + 1 );
+    strcpy( text, t );
+  }
+
+  oyProfile_Release( &p );
+  return text;
+}
+#endif
