@@ -1,4 +1,4 @@
-/** xcmwindow.c
+/** xcm.c
  *
  *  A net-color spec compatible information tool for server based per window color management.
  *
@@ -7,7 +7,7 @@
  *  @par Copyright:
  *             (c) 2011 - Kai-Uwe Behrmann <ku.b@gmx.de>
  *
- *  gcc -Wall -g -I../.. xcmwindow.c -o xcmwindow `pkg-config --cflags --libs x11 xcm oyranos`
+ *  gcc -Wall -g -I../.. xcm.c -o xcm `pkg-config --cflags --libs x11 xcm oyranos`
  */
 
 #include <stdio.h>
@@ -58,7 +58,8 @@ void printfHelp(int argc, char ** argv)
   fprintf( stderr, "\n");
   fprintf( stderr, "  %s\n",               _("Set window region:"));
   fprintf( stderr, "      %s -r\n",argv[0]);
-  fprintf( stderr, "        -x pos_x -y pos_y --width width --height height\n");
+  fprintf( stderr, "        [-x pos_x -y pos_y --width width --height height|\n"
+                   "         --geometry width_x_height_+_x_+_y]\n");
   fprintf( stderr, "        --id=window_id [--profile filename.icc]\n");
   fprintf( stderr, "\n");
   fprintf( stderr, "  %s\n",               _("Print a help text:"));
@@ -135,6 +136,7 @@ int main(int argc, char ** argv)
   int list_windows = 0;
   int count = 0;
   const char * display = NULL;
+  const char * geometry = NULL;
 
   Display * dpy = NULL;
   int screen = 0;
@@ -195,6 +197,8 @@ int main(int argc, char ** argv)
                         { OY_PARSE_STRING_ARG2( profile_name, "profile" ); break; }
                         else if(OY_IS_ARG("display"))
                         { OY_PARSE_STRING_ARG2( display, "display" ); break; }
+                        else if(OY_IS_ARG("geometry"))
+                        { OY_PARSE_STRING_ARG2( geometry, "geometry" ); break; }
                         else if(OY_IS_ARG("window-name"))
                         { print_window_name = 1; i=100; break; }
                         }
@@ -233,6 +237,18 @@ int main(int argc, char ** argv)
   {
     fprintf( stderr, "%s %s\n", "unable to open display", display?display:"");
     exit(1);
+  }
+
+  if(geometry)
+  {
+    int matches = sscanf( geometry, "%ix%i+%i+%i",
+                          &width, &height, &x, &y );
+    if(matches !=  4)
+    {
+      fprintf( stderr, "%s: --geometry width_x_height_+_xpos_+_ypos (%s)\n",
+               _("argument no recognised"), geometry);
+      exit(1);
+    }
   }
 
   win = (Window) id;
