@@ -10,14 +10,17 @@
  *  gcc -Wall -g -I../.. xcmwindow.c -o xcmwindow `pkg-config --cflags --libs x11 xcm oyranos`
  */
 
-#include <X11/Xcm/Xcm.h>
-#include <X11/Xcm/XcmEvents.h>
-
-#include "xcm_version.h"
-
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <unistd.h> /* sleep() */
+
+#include <X11/Xcm/Xcm.h>
+#include <X11/Xcm/XcmEvents.h>
+#include <X11/extensions/Xfixes.h> /* XserverRegion */
+#include <X11/Xcm/Xcm.h> /* XcolorRegion */
+
+#include "xcm_version.h"
 
 #ifndef USE_GETTEXT
 #define _(text) text
@@ -52,6 +55,11 @@ void printfHelp(int argc, char ** argv)
   fprintf( stderr, "\n");
   fprintf( stderr, "  %s\n",               _("Print infos about a window:"));
   fprintf( stderr, "      %s -p --id=window_id\n", argv[0]);
+  fprintf( stderr, "\n");
+  fprintf( stderr, "  %s\n",               _("Set window region:"));
+  fprintf( stderr, "      %s -r\n",argv[0]);
+  fprintf( stderr, "        -x pos_x -y pos_y --width width --height height\n");
+  fprintf( stderr, "        --id=window_id [--profile filename.icc]\n");
   fprintf( stderr, "\n");
   fprintf( stderr, "  %s\n",               _("Print a help text:"));
   fprintf( stderr, "      %s -h\n",        argv[0]);
@@ -127,12 +135,29 @@ int main(int argc, char ** argv)
   int list_windows = 0;
   int count = 0;
   const char * display = NULL;
+
   Display * dpy = NULL;
   int screen = 0;
   Window win = 0,
          root;
+
+  int place_region = 0;
+  int x = 0, y = 0, width = 0, height = 0;
+  const char * profile_name = NULL;
   int verbose = 0;
   int result = 0;
+
+  XserverRegion reg = 0;
+  XcolorRegion region;
+  int error;
+  XRectangle rec[2] = { { 0,0,0,0 }, { 0,0,0,0 } };
+
+#ifdef HAVE_OY
+  char * blob = 0;
+  size_t size = 0;
+  oyProfile_s * p = 0;
+  XcolorProfile * profile = 0;
+#endif
 
 #ifdef USE_GETTEXT
   setlocale(LC_ALL,"");
@@ -152,13 +177,22 @@ int main(int argc, char ** argv)
             {
               case 'l': list_windows = 1; break;
               case 'p': print = 1; break;
+              case 'r': place_region = 1; break;
               case 'v': verbose += 1; break;
+              case 'x': OY_PARSE_INT_ARG( x ); break;
+              case 'y': OY_PARSE_INT_ARG( y ); break;
               case 'h':
               case '-':
                         if(i == 1)
                         {
                              if(OY_IS_ARG("id"))
                         { OY_PARSE_INT_ARG2( id, "id" ); break; }
+                        else if(OY_IS_ARG("width"))
+                        { OY_PARSE_INT_ARG2( width, "width" ); break; }
+                        else if(OY_IS_ARG("height"))
+                        { OY_PARSE_INT_ARG2( height, "height" ); break; }
+                        else if(OY_IS_ARG("profile"))
+                        { OY_PARSE_STRING_ARG2( profile_name, "profile" ); break; }
                         else if(OY_IS_ARG("display"))
                         { OY_PARSE_STRING_ARG2( display, "display" ); break; }
                         else if(OY_IS_ARG("window-name"))
@@ -269,7 +303,76 @@ int main(int argc, char ** argv)
       exit(1);
     }
     fprintf( stdout, "%s\n", XcmePrintWindowRegions( dpy, win, 1 ) );
+  } else if(place_region)
+  {
+    int need_wait = 1;
+#ifdef HAVE_OY
+    /* Upload a ICC profile to X11 root window */
+    if(profile_name)
+    {
+      p = oyProfile_FromFile( profile_name, 0,0 );
+      if(p)
+      {
+        blob = oyProfile_GetMem( p, &size, 0,0 );
+
+        if(blob && size)
+        {
+        /* Create a XcolorProfile object that will be uploaded to the display.*/
+          profile = malloc(sizeof(XcolorProfile) + size);
+
+          oyProfile_GetMD5(p, OY_FROM_PROFILE, (uint32_t*)profile->md5);
+
+          profile->length = htonl(size);
+          memcpy(profile + 1, blob, size);
+
+          result = XcolorProfileUpload( dpy, profile );
+          if(result)
+            printf("XcolorProfileUpload: %d\n", result);
+        }
+        oyProfile_Release( &p );
+      }
+    }
+#endif
+
+    rec[0].x = x;
+    rec[0].y = y;
+    rec[0].width = width;
+    rec[0].height = height;
+
+    reg = XFixesCreateRegion( dpy, rec, 1);
+
+    region.region = htonl(reg);
+    if(blob && size)
+      memcpy(region.md5, profile->md5, 16);
+    else
+      memset( region.md5, 0, 16 );
+
+    if(rec[0].x || rec[0].y || rec[0].width || rec[0].height)
+      error = XcolorRegionInsert( dpy, win, 0, &region, 1 );
+    else
+    {
+      unsigned long nRegions = 0;
+      XcolorRegion * r = XcolorRegionFetch( dpy, win, &nRegions );
+      need_wait = 0;
+      if(nRegions && r)
+      {
+        error = XcolorRegionDelete( dpy, win, 0, nRegions );
+        fprintf(stderr, "deleted %lu region%c\n", nRegions, nRegions==1?' ':'s');
+        XFree( r ); r = 0;
+      } else
+      {
+        fprintf(stderr, "no region to delete \n");
+      }
+    }
+
+    XFlush( dpy );
+
+    /** Closing the display object will destroy all XFixes regions automatically
+     *  by Xorg. Therefore we loop here to keep the XFixes regions alive. */
+    if(need_wait)
+      while(1) sleep(2);
   }
+  XCloseDisplay( dpy );
 
   return result;
 }
