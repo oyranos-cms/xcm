@@ -1,0 +1,80 @@
+.TH xcmddc 1 "September 08, 2011" "User Commands"
+.SH NAME
+xcm \- window region handling
+.SH SYNOPSIS
+\fBxcm\fR -l [--window-name] [-v]
+.fi 
+\fBxcm\fR -p \fIWINDOW_ID\fR
+.fi 
+\fBxcm\fR -r --id \fIWINDOW_ID\fR [--geometry \fIWIDTHxHEIGHT+X+Y\fR] [--profile \fIFILENAME.ICC\fR]]
+.fi 
+\fBxcm\fR [-h]
+.fi 
+.SH DESCRIPTION
+The xcm tool handles per window regions and profiles following the net-color spec.
+.SH OPTIONS
+.TP
+.B \-l
+list windows.
+All windows are listed by ID.
+
+\fB--window-name\fR show each window name after the ID.
+.TP
+.B \-p \-\-id\fR=\fIWINDOW_ID\fR
+print window color region informations.
+
+\fB--id\fR the X11 window ID as integer.
+.TP
+\fB\-r \fB--id\fR \fIWINDOW_ID\fR \fB--geometry\fR \fIWxH+X+Y\fR \fB--profile\fR \fIPROFILE.ICC\fR
+set a window color region. The geometry will be added to the existing regions of the selected window. A geometry of 0x0+0+0 is a request to remove all regions. Overlapping regions are undefined. The ICC profile is optional.
+
+\fB--id\fR the X11 window ID as integer.
+
+\fB--geometry\fR the window geometry.
+
+\fB--profile\fR the region profile to upload.
+.SH GENERAL OPTIONS
+.TP
+.B \-v, \-\-verbose
+increase verbosity
+.SH EXAMPLES 
+.TP
+Show all windows and their names:
+.B xcmddc -l --window-name
+.PP 
+.TP
+Print a windows regions:
+.B xcmddc -p -id 12345
+.PP 
+.TP
+Set a windows region to a witdht of 100, a height of 150, 100 pixel from right and 10 pixels from top:
+.B xcmddc -r -id 12345 --geometry 100x150+100+10
+.PP 
+.TP
+Set a windows region with a ICC profile:
+.B xcmddc -r -id 12345 --geometry 100x150+100+10 --profile ./my_profile.icc
+.PP 
+.TP
+Set a windows region to a Oyranos ICC profile:
+.B xcmddc -r -id 12345 --geometry 100x150+100+10 --profile XYZ.icc
+.PP 
+.TP
+Unset all windows regions:
+.B xcmddc -r -id 12345 --geometry 0x0+0+0
+.PP 
+.TP
+Print a help text:
+.B xcmddc -h
+.PP 
+.SH AUTHOR
+Kai-Uwe Behrmann (ku.b (at) gmx.de)
+.SH COPYRIGHT
+(c) 2011, Kai-Uwe Behrmann
+.fi
+License: MIT <http://www.opensource.org/licenses/mit-license.php>
+.SH "SEE ALSO"
+xcmedid(1) xcmevents(1) xcmddc(1) libXcm(3) Xcm(3)
+.fi
+http://www.oyranos.org
+.SH "REPORTING BUGS"
+at: http://sourceforge.net/tracker/?group_id=177017&atid=879553
