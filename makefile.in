@@ -31,6 +31,7 @@ LDLIBS = $(LDFLAGS) -L$(libdir) -L. \
 
 CHEADERS = 
 CFILES = \
+	$(XCM_CFILES) \
 	$(XCMDDC_CFILES) \
 	$(XCMEDID_CFILES) \
 	$(XCMEVENTS_CFILES)
@@ -41,6 +42,8 @@ XCMEDID_CFILES = \
 	src/$(TARGET_MINI)edid/$(TARGET_MINI)edid.c
 XCMDDC_CFILES = \
 	src/$(TARGET_MINI)ddc/$(TARGET_MINI)ddc.c
+XCM_CFILES = \
+	src/$(TARGET_MINI)/$(TARGET_MINI).c
 
 UDEV_RULES = \
 	scripts/90-xcm-i2c.rules
@@ -63,7 +66,7 @@ DOKU =  AUTHORS \
         COPYING \
         README
 MAN3_HAND =
-MAN1 =  xcmddc.1 xcmedid.1 xcmevents.1
+MAN1 =  xcm.1 xcmddc.1 xcmedid.1 xcmevents.1
 MAN3 =  $(MAN3_HAND) $(MAN3_GENERATED)
 
 TOP_SOURCES =
@@ -81,12 +84,14 @@ OBJECTS = $(CPPFILES:.cpp=.o) $(CXXFILES:.cxx=.o) $(CFILES:.c=.o)
 XCMEVENTS_OBJECTS = $(XCMEVENTS_CFILES:.c=.o)
 XCMEDID_OBJECTS = $(XCMEDID_CFILES:.c=.o)
 XCMDDC_OBJECTS = $(XCMDDC_CFILES:.c=.o)
+XCM_OBJECTS = $(XCM_CFILES:.c=.o)
 
 CLEAN_OBJECTS = \
 	$(OBJECTS) \
 	$(XCMEVENTS_OBJECTS) \
 	$(XCMEDID_OBJECTS) \
-	$(XCMDDC_OBJECTS)
+	$(XCMDDC_OBJECTS) \
+	$(XCM_OBJECTS)
 
 SUB_OBJECTS = \
 	$(CFILES:.c=.o)
@@ -110,7 +115,7 @@ ALL_FILES = \
 
 # build all what is needed to run the libraries, helpers
 all:	config.log.h mkdepend \
-	$(TARGET_MINI)events $(TARGET_MINI)edid $(TARGET_DDC)
+	$(TARGET_MINI) $(TARGET_MINI)events $(TARGET_MINI)edid $(TARGET_DDC)
 	echo ... $@ done
 
 # get time stamp
@@ -160,15 +165,22 @@ $(TARGET_MINI)ddc:	 $(XCMDDC_OBJECTS)
 	-o $@ $(XCMDDC_OBJECTS) $(m) \
 	-L$(libdir) $(LDLIBS) $(m) $(X11_LIBS)
 
+$(TARGET_MINI):	 $(XCM_OBJECTS)
+	echo Linking $@ ...
+	$(CC) -I./ $(CFLAGS_) \
+	-o $@ $(XCM_OBJECTS) $(m) \
+	-L$(libdir) $(LDLIBS) $(m) $(X11_LIBS)
+
 check:	all
 	echo current git version is:
 	n=0; for i in `cd $(SRCDIR); git rev-list master`; do if [ $${n} -eq 0 ]; then echo git id:$${i}; fi; n=1; done
 	oyranos-monitor -f edid -o edid.bin
-	./$(TARGET_MINI)edid edid.bin
+	./$(TARGET_MINI)edid --openicc edid.bin
 	if [ `oyranos-monitor -l | wc -l` -gt 1 ]; then \
-	  oyranos-monitor -x 2000 -f edid -o edid2.bin; \
-	  ./$(TARGET_MINI)edid edid2.bin; \
+	  oyranos-monitor -d 1 -f edid -o edid2.bin; \
+	  ./$(TARGET_MINI)edid --openicc edid2.bin; \
 	fi
+	./$(TARGET_MINI) -l --window-name
 
 
 
@@ -281,6 +293,8 @@ clean:
 	-$(RM) $(CLEAN_OBJECTS)
 	$(RM) $(TARGET_MINI)events
 	$(RM) $(TARGET_MINI)edid
+	$(RM) $(TARGET_MINI)ddc
+	$(RM) $(TARGET_MINI)
 	-for lib in $(LIBRARIES); do \
 	   $(RM) $(LIB)$${lib}$(SO).$(VERSION)$(LIBEXT) \
 	         $(LIB)$${lib}$(SO).$(VERSION_A)$(LIBEXT) \
@@ -386,6 +400,9 @@ copy_files:
 	cd $(SRCDIR) && \
 	  $(COPY) -R $(ALL_FILES) $(DESTDIR)
 	$(COPY) $(CONFIG_FILES) $(DESTDIR)
+	mkdir -p $(DESTDIR)/src/$(TARGET_MINI)
+	cd $(SRCDIR) && \
+	  $(COPY) $(XCM_CFILES) $(DESTDIR)/src/$(TARGET_MINI)
 	mkdir -p $(DESTDIR)/src/$(TARGET_MINI)events
 	cd $(SRCDIR) && \
 	  $(COPY) $(XCMEVENTS_CFILES) $(DESTDIR)/src/$(TARGET_MINI)events

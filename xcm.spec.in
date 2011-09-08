@@ -66,6 +66,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/%{name}events
 %{_bindir}/%{name}edid
 %{_bindir}/%{name}ddc
+%{_bindir}/%{name}
+%{_mandir}/man1/%{name}.1*
 %{_mandir}/man1/%{name}ddc.1*
 %{_mandir}/man1/%{name}edid.1*
 %{_mandir}/man1/%{name}events.1*
@@ -74,6 +76,10 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Sep 8 2011 Kai-Uwe Behrmann
+- add and install xcm window region tool
+- install xcm man page for xcm
+
 * Thu Dec 30 2010 Kai-Uwe Behrmann
 - install EDID from i2c tool
 - install man pages
