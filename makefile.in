@@ -194,6 +194,7 @@ install_bin:	all
 	$(INSTALL) -m 755 $(TARGET_MINI)edid $(DESTDIR)$(bindir)
 	-$(INSTALL) -m 755 $(TARGET_MINI)ddc $(DESTDIR)$(bindir)
 	-mkdir -p $(DESTDIR)/lib/udev/rules.d/
+	$(INSTALL) -m 755 $(TARGET_MINI) $(DESTDIR)$(bindir)
 	-$(INSTALL) -m 644 $(UDEV_RULES) $(DESTDIR)/lib/udev/rules.d/
 	echo ... binary Installation finished
 
@@ -265,6 +266,7 @@ uninstall_bin:
 	$(RM) $(DESTDIR)$(bindir)/$(TARGET_MINI)events
 	$(RM) $(DESTDIR)$(bindir)/$(TARGET_MINI)edid
 	-$(RM) $(DESTDIR)$(bindir)/$(TARGET_MINI)ddc
+	$(RM) $(DESTDIR)$(bindir)/$(TARGET_MINI)
 	echo ... done uninstalling binaries
 	
 uninstall-docs:	uninstall_docu
