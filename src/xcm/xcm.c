@@ -243,10 +243,10 @@ int main(int argc, char ** argv)
   {
     int matches = sscanf( geometry, "%ix%i+%i+%i",
                           &width, &height, &x, &y );
-    if(matches !=  4)
+    if(matches !=  4 && strcmp(geometry,"0x0+0+0") != 0)
     {
-      fprintf( stderr, "%s: --geometry width_x_height_+_xpos_+_ypos (%s)\n",
-               _("argument no recognised"), geometry);
+      fprintf( stderr, "%s: --geometry WIDTHxHEIGHT+XPOS+YPOS (%s)\n",
+               _("argument not recognised"), geometry);
       exit(1);
     }
   }
