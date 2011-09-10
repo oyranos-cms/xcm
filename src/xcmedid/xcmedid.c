@@ -8,15 +8,45 @@
  *             (c) 2009-2011 - Kai-Uwe Behrmann <ku.b@gmx.de>
  *
  */
-#include <X11/Xcm/XcmEdidParse.h>
-#include "xcm_version.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#ifndef USE_GETTEXT
-#define _(text) text
-#endif
+#include <X11/Xcm/XcmEdidParse.h>
+
+#include "xcm_version.h"
+#include "xcm_macros.h"
+
+void printfHelp(int argc, char ** argv)
+{
+  fprintf( stderr, "\n");
+  fprintf( stderr, "%s %s\n",   argv[0],
+                                _("is a EDID parsing tool"));
+  fprintf( stderr, "  Xcm v%s config: %s devel period: %s\n",
+                  XCM_VERSION_NAME,
+                  XCM_CONFIG_DATE, XCM_DATE );
+  fprintf( stderr, "\n");
+  fprintf( stderr, "%s\n",                 _("Usage"));
+  fprintf( stderr, "      %s EDID.bin\n\n", argv[0]);
+  fprintf( stderr, "\n");
+
+
+  fprintf( stderr, "%s\n",                 _("Usage"));
+  fprintf( stderr, "  %s\n",               _("Print EDID values:"));
+  fprintf( stderr, "      %s EDID.bin\n\n", argv[0]);
+  fprintf( stderr, "      cat EDID.bin | %s\n", argv[0]);
+  fprintf( stderr, "        [--openicc]\n");
+  fprintf( stderr, "\n");
+  fprintf( stderr, "  %s\n",               _("Print a help text:"));
+  fprintf( stderr, "      %s -h\n",        argv[0]);
+  fprintf( stderr, "\n");
+  fprintf( stderr, "  %s\n",               _("General options:"));
+  fprintf( stderr, "        --openicc       %s\n", _("use JSON"));
+  fprintf( stderr, "        -v              %s\n", _("verbose"));
+  fprintf( stderr, "\n");
+  fprintf( stderr, "\n");
+}
 
 int main(int argc, char ** argv)
 {
@@ -28,16 +58,59 @@ int main(int argc, char ** argv)
   int s = 0;
   int min_args = 1;
   int print_openicc_json = 0;
+  const char * file_name = NULL;
 
-  if(argc > min_args)
+#ifdef USE_GETTEXT
+  setlocale(LC_ALL,"");
+#endif
+
+  if(argc > 1)
   {
-    if(strcmp( argv[min_args], "--openicc" ) == 0)
+    int pos = 1, i;
+    char *wrong_arg = 0;
+    while(pos < argc)
     {
-      print_openicc_json = 1;
-      ++min_args;
+      switch(argv[pos][0])
+      {
+        case '-':
+            for(i = 1; pos < argc && i < strlen(argv[pos]); ++i)
+            switch (argv[pos][i])
+            {
+              case 'v': verbose += 1; break;
+              case '-':
+                        if(i == 1)
+                        {
+                             if(OY_IS_ARG("openicc"))
+                        { print_openicc_json = 1; i=100; break; }
+                        }
+                        printfHelp(argc, argv);
+                        exit (0);
+                        break;
+              case '?':
+              case 'h':
+              default:
+                        wrong_arg = argv[pos];
+                        break;
+            }
+            break;
+        default:
+                        if(!file_name)
+                        file_name = argv[pos];
+      }
+      if( wrong_arg )
+      {
+       fprintf(stderr, "%s %s\n", _("wrong argument to option:"), wrong_arg);
+       printfHelp(argc, argv);
+       exit(1);
+      }
+      ++pos;
     }
 
-    fp = fopen(argv[min_args],"rb");
+  } 
+
+  if(file_name)
+  {
+    fp = fopen(file_name,"rb");
     if(fp)
     {
       fseek(fp,0L,SEEK_END); 
@@ -60,6 +133,11 @@ int main(int argc, char ** argv)
       mem[size++] = c;
   }
 
+  if(verbose)
+  {
+    fprintf(stderr, "JSON=%d\n", print_openicc_json);
+  }
+
   if(mem && size)
   {
     if(print_openicc_json)
@@ -79,19 +157,6 @@ int main(int argc, char ** argv)
 
   if(fp && fp != stdin)
     fclose (fp);
-
-  if(err)
-  {
-  fprintf( stderr, "\n");
-  fprintf( stderr, "%s %s\n",   argv[0],
-                                _("is a EDID parsing tool"));
-  fprintf( stderr, "  Xcm v%s config: %s devel period: %s\n",
-                  XCM_VERSION_NAME,
-                  XCM_CONFIG_DATE, XCM_DATE );
-  fprintf( stderr, "\n");
-  fprintf( stderr, "%s\n",                 _("Usage"));
-  fprintf(stderr, "      %s EDID.bin\n\n", argv[0]);
-  }
 
   return err;
 }
