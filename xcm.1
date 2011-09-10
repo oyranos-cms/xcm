@@ -1,4 +1,4 @@
-.TH xcmddc 1 "September 08, 2011" "User Commands"
+.TH xcm 1 "September 08, 2011" "User Commands"
 .SH NAME
 xcm \- window region handling
 .SH SYNOPSIS
@@ -40,31 +40,31 @@ increase verbosity
 .SH EXAMPLES 
 .TP
 Show all windows and their names:
-.B xcmddc -l --window-name
+.B xcm -l --window-name
 .PP 
 .TP
 Print a windows regions:
-.B xcmddc -p -id 12345
+.B xcm -p -id 12345
 .PP 
 .TP
 Set a windows region to a witdht of 100, a height of 150, 100 pixel from right and 10 pixels from top:
-.B xcmddc -r -id 12345 --geometry 100x150+100+10
+.B xcm -r -id 12345 --geometry 100x150+100+10
 .PP 
 .TP
 Set a windows region with a ICC profile:
-.B xcmddc -r -id 12345 --geometry 100x150+100+10 --profile ./my_profile.icc
+.B xcm -r -id 12345 --geometry 100x150+100+10 --profile ./my_profile.icc
 .PP 
 .TP
 Set a windows region to a Oyranos ICC profile:
-.B xcmddc -r -id 12345 --geometry 100x150+100+10 --profile XYZ.icc
+.B xcm -r -id 12345 --geometry 100x150+100+10 --profile XYZ.icc
 .PP 
 .TP
 Unset all windows regions:
-.B xcmddc -r -id 12345 --geometry 0x0+0+0
+.B xcm -r -id 12345 --geometry 0x0+0+0
 .PP 
 .TP
 Print a help text:
-.B xcmddc -h
+.B xcm -h
 .PP 
 .SH AUTHOR
 Kai-Uwe Behrmann (ku.b (at) gmx.de)
