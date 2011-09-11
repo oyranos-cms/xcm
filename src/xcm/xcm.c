@@ -1,6 +1,7 @@
 /** xcm.c
  *
- *  A net-color spec compatible information tool for server based per window color management.
+ *  A X Color Management specification compatible information tool for server 
+ *  based per window color management.
  *
  *  @par License: 
  *             MIT <http://www.opensource.org/licenses/mit-license.php>
