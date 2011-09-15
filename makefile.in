@@ -29,7 +29,8 @@ INCL= -I/usr/include -I$(includedir) -I/usr/X11R6/include -I$(SRCDIR)/include \
 LDLIBS = $(LDFLAGS) -L$(libdir) -L. \
 	 $(OYRANOS_LIBS) $(c)
 
-CHEADERS = 
+TOP_CHEADERS = \
+	$(TARGET)_macros.h
 CFILES = \
 	$(XCM_CFILES) \
 	$(XCMDDC_CFILES) \
