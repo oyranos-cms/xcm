@@ -36,13 +36,14 @@ void printfHelp(int argc, char ** argv)
   fprintf( stderr, "  %s\n",               _("Print EDID values:"));
   fprintf( stderr, "      %s EDID.bin\n\n", argv[0]);
   fprintf( stderr, "      cat EDID.bin | %s\n", argv[0]);
-  fprintf( stderr, "        [--openicc]\n");
+  fprintf( stderr, "        [--openicc|--ppmcie]\n");
   fprintf( stderr, "\n");
   fprintf( stderr, "  %s\n",               _("Print a help text:"));
   fprintf( stderr, "      %s -h\n",        argv[0]);
   fprintf( stderr, "\n");
   fprintf( stderr, "  %s\n",               _("General options:"));
   fprintf( stderr, "        --openicc       %s\n", _("use JSON"));
+  fprintf( stderr, "        --ppmcie        %s\n", _("ppcmcie compatible"));
   fprintf( stderr, "        -v              %s\n", _("verbose"));
   fprintf( stderr, "\n");
   fprintf( stderr, "\n");
@@ -57,7 +58,8 @@ int main(int argc, char ** argv)
   size_t size = 0;
   int s = 0;
   int min_args = 1;
-  int print_openicc_json = 0;
+  int print_openicc_json = 0,
+      print_ppmcie = 0;
   const char * file_name = NULL;
 
 #ifdef USE_GETTEXT
@@ -82,6 +84,8 @@ int main(int argc, char ** argv)
                         {
                              if(OY_IS_ARG("openicc"))
                         { print_openicc_json = 1; i=100; break; }
+                        else if(OY_IS_ARG("ppmcie"))
+                        { print_ppmcie = 1; i=100; break; }
                         }
                         printfHelp(argc, argv);
                         exit (0);
@@ -142,13 +146,42 @@ int main(int argc, char ** argv)
   {
     if(print_openicc_json)
       err = XcmEdidPrintOpenIccJSON( mem, &txt, malloc );
+    else if(print_ppmcie)
+    {
+      XcmEdidKeyValue_s * list = 0;
+      int i = 0, count = 0;
+      err = XcmEdidParse( mem, &list, &count );
+      if(list && count)
+      {
+        fprintf(stderr, "ppmcie:");
+        for(i = 0; i < count; ++i)
+        {
+          if(strcmp(list[i].key,XCM_EDID_KEY_REDx) == 0)
+          { fprintf(stdout," -red %g", list[i].value.dbl); fflush(stdout); }
+          else if(strcmp(list[i].key,XCM_EDID_KEY_REDy) == 0)
+          { fprintf(stdout," %g", list[i].value.dbl); fflush(stdout); }
+          else if(strcmp(list[i].key,XCM_EDID_KEY_GREENx) == 0)
+          { fprintf(stdout," -green %g", list[i].value.dbl); fflush(stdout); }
+          else if(strcmp(list[i].key,XCM_EDID_KEY_GREENy) == 0)
+          { fprintf(stdout," %g", list[i].value.dbl); fflush(stdout); }
+          else if(strcmp(list[i].key,XCM_EDID_KEY_BLUEx) == 0)
+          { fprintf(stdout," -blue %g", list[i].value.dbl); fflush(stdout); }
+          else if(strcmp(list[i].key,XCM_EDID_KEY_BLUEy) == 0)
+          { fprintf(stdout," %g", list[i].value.dbl); fflush(stdout); }
+          else if(strcmp(list[i].key,XCM_EDID_KEY_WHITEx) == 0)
+          { fprintf(stdout," -white %g", list[i].value.dbl); fflush(stdout); }
+          else if(strcmp(list[i].key,XCM_EDID_KEY_WHITEy) == 0)
+          { fprintf(stdout," %g", list[i].value.dbl); fflush(stdout); }
+        }
+      }
+    }
     else
       err = XcmEdidPrintString( mem, &txt, malloc );
 
       if(err)
         fprintf( stderr, "Error: %s (%d)\n",
                  XcmEdidErrorToString(err), (int)size);
-      else
+      else if(txt)
       {
         fprintf(stdout, "%s\n", txt);
         free(txt);

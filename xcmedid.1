@@ -1,4 +1,4 @@
-.TH xcmedid 1 "December 30, 2010" "User Commands"
+.TH xcmedid 1 "September 24, 2011" "User Commands"
 .SH NAME
 xcmddc \- monitor EDID to key/value dumper
 .SH SYNOPSIS
@@ -20,6 +20,10 @@ Fetch EDID over i2c and dump key/value pairs:
 .TP
 Fetch EDID over Oyranos and dump key/value pairs:
 .B oyranos-monitor -f edid -d 0 | xcmedid
+.PP 
+.TP
+Fetch EDID over Oyranos and show in ppmcie:
+.B ppmcie `oyranos-monitor -f edid -d 0 | xcmedid --ppmcie` > tmp.ppm; xli tmp.ppm
 .PP 
 .SH AUTHOR
 Kai-Uwe Behrmann (ku.b (at) gmx.de)
