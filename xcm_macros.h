@@ -21,6 +21,7 @@ char * getName                       ( const void        * data,
                                        size_t              size,
                                        void              *(allocate_func)(size_t),
                                        int                 file_name );
+#define verbose oy_debug
 #else
 #define oy_debug verbose
 #endif
@@ -79,5 +80,4 @@ char * getName                       ( const void        * data,
                         (strlen(argv[pos])-2 >= strlen(arg) && \
                          memcmp(&argv[pos][2],arg, strlen(arg)) == 0)
 
-#define verbose oy_debug
 
