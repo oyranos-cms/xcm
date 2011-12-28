@@ -61,6 +61,9 @@ int main(int argc, char ** argv)
   int print_openicc_json = 0,
       print_ppmcie = 0;
   const char * file_name = NULL;
+#ifndef HAVE_OY
+  int verbose = 0;
+#endif
 
 #ifdef USE_GETTEXT
   setlocale(LC_ALL,"");

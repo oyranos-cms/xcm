@@ -289,9 +289,11 @@ int main(int argc, char ** argv)
     reg = XFixesCreateRegion( dpy, rec, 1);
 
     region.region = htonl(reg);
+#ifdef HAVE_OY
     if(blob && size)
       memcpy(region.md5, profile->md5, 16);
     else
+#endif
       memset( region.md5, 0, 16 );
 
     if(rec[0].x || rec[0].y || rec[0].width || rec[0].height)

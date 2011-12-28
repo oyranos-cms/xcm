@@ -21,6 +21,8 @@ char * getName                       ( const void        * data,
                                        size_t              size,
                                        void              *(allocate_func)(size_t),
                                        int                 file_name );
+#else
+#define oy_debug verbose
 #endif
 
 /* command line parsing macros */
