@@ -23,7 +23,10 @@
 
 #include "xcm_version.h"
 #include "xcm_macros.h"
+#define OY_DBG_FORMAT_ "%s:%d %s() "
+#define OY_DBG_ARGS_ __FILE__,__LINE__,strrchr(__func__,'/')?strrchr(__func__,'/')+1:__func__
 
+int XcolorRegionFind(XcolorRegion * old_regions, unsigned long old_regions_n, Display * dpy, Window win, XRectangle * rectangle);
 
 void printfHelp(int argc, char ** argv)
 {
@@ -75,6 +78,7 @@ int main(int argc, char ** argv)
          root;
 
   int place_region = 0;
+  int delete_region = 0;
   int x = 0, y = 0, width = 0, height = 0;
   const char * profile_name = NULL;
   int verbose = 0;
@@ -108,6 +112,7 @@ int main(int argc, char ** argv)
             for(i = 1; pos < argc && i < strlen(argv[pos]); ++i)
             switch (argv[pos][i])
             {
+              case 'd': delete_region = 1; break;
               case 'l': list_windows = 1; break;
               case 'p': print = 1; break;
               case 'r': place_region = 1; break;
@@ -180,6 +185,11 @@ int main(int argc, char ** argv)
                _("argument not recognised"), geometry);
       exit(1);
     }
+
+    rec[0].x = x;
+    rec[0].y = y;
+    rec[0].width = width;
+    rec[0].height = height;
   }
 
   win = (Window) id;
@@ -281,11 +291,6 @@ int main(int argc, char ** argv)
     }
 #endif
 
-    rec[0].x = x;
-    rec[0].y = y;
-    rec[0].width = width;
-    rec[0].height = height;
-
     reg = XFixesCreateRegion( dpy, rec, 1);
 
     region.region = htonl(reg);
@@ -297,8 +302,16 @@ int main(int argc, char ** argv)
       memset( region.md5, 0, 16 );
 
     if(rec[0].x || rec[0].y || rec[0].width || rec[0].height)
+    {
+
+      /* upload the new or changed region to the X server */
       error = XcolorRegionInsert( dpy, win, 0, &region, 1 );
-    else
+      if(error)
+          printf( OY_DBG_FORMAT_
+                   "XcolorRegionInsert failed %d\n",
+                   OY_DBG_ARGS_, error );
+
+    } else
     {
       unsigned long nRegions = 0;
       XcolorRegion * r = XcolorRegionFetch( dpy, win, &nRegions );
@@ -320,10 +333,83 @@ int main(int argc, char ** argv)
      *  by Xorg. Therefore we loop here to keep the XFixes regions alive. */
     if(need_wait)
       while(1) sleep(2);
+
+  } if(delete_region)
+  {
+    XcolorRegion *old_regions = 0;
+    unsigned long old_regions_n = 0;
+    int pos = -1;
+
+    /* get old regions */
+    old_regions = XcolorRegionFetch( dpy, win, &old_regions_n );
+    /* remove specified region */
+    pos = XcolorRegionFind( old_regions, old_regions_n, dpy, win, rec );
+    XFree( old_regions );
+    if(pos >= 0)
+    {
+      int undeleted_n = old_regions_n;
+      XcolorRegionDelete( dpy, win, pos, 1 );
+      old_regions = XcolorRegionFetch( dpy, win, &old_regions_n );
+      if(undeleted_n - old_regions_n != 1)
+        printf(  OY_DBG_FORMAT_"removed %d; have still %d\n", OY_DBG_ARGS_,
+                 pos, (int)old_regions_n );
+      else
+        fprintf( stderr, "removed position %d\n", pos );
+    } else
+      printf( "region not found: %s in %lu\n", geometry, old_regions_n );
+
+    XFlush( dpy );
+
   }
+
   XCloseDisplay( dpy );
 
   return result;
+}
+
+int XcolorRegionFind(XcolorRegion * old_regions, unsigned long old_regions_n, Display * dpy, Window win, XRectangle * rectangle)
+{
+  XRectangle * rect = 0;
+  int nRect = 0;
+  int pos = -1;
+  int i, j;
+
+  /* get old regions */
+  old_regions = XcolorRegionFetch( dpy, win, &old_regions_n );
+  /* search region */
+  for(i = 0; i < old_regions_n; ++i)
+  {
+
+    if(!old_regions[i].region || pos >= 0)
+      break;
+
+    rect = XFixesFetchRegion( dpy, ntohl(old_regions[i].region),
+                              &nRect );
+
+    for(j = 0; j < nRect; ++j)
+    {
+#ifdef HAVE_OY
+      if(oy_debug)
+        printf( OY_DBG_FORMAT_
+                 "reg[%d]: %dx%d+%d+%d %dx%d+%d+%d\n",
+                   OY_DBG_ARGS_, i,
+                   rectangle->width, rectangle->height,
+                   rectangle->x, rectangle->y,
+                   rect[j].width, rect[j].height, rect[j].x, rect[j].y
+                  );
+#endif
+      if(rectangle->x == rect[j].x &&
+         rectangle->y == rect[j].y &&
+         rectangle->width == rect[j].width &&
+         rectangle->height == rect[j].height )
+      {
+        pos = i;
+        break;
+      }
+    }
+  }
+
+  return pos;
 }
 
 
