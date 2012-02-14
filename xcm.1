@@ -1,4 +1,4 @@
-.TH xcm 1 "September 08, 2011" "User Commands"
+.TH xcm 1 "January 12, 2012" "User Commands"
 .SH NAME
 xcm \- window region handling
 .SH SYNOPSIS
@@ -33,6 +33,14 @@ set a window color region. The geometry will be added to the existing regions of
 \fB--geometry\fR the window geometry.
 
 \fB--profile\fR the region profile to upload.
+.TP
+\fB\-d \fB--id\fR \fIWINDOW_ID\fR \fB--geometry\fR \fIWxH+X+Y\fR \fB--profile\fR \fIPROFILE.ICC\fR
+delete a window color region. The geometry will be searched and removed in the existing regions of the selected window.
+
+\fB--id\fR the X11 window ID as integer.
+
+\fB--geometry\fR the window geometry.
+
 .SH GENERAL OPTIONS
 .TP
 .B \-v, \-\-verbose
@@ -63,13 +71,17 @@ Unset all windows regions:
 .B xcm -r -id 12345 --geometry 0x0+0+0
 .PP 
 .TP
+Delete one window region:
+.B xcm -d -id 12345 --geometry 100x150+100+10
+.PP 
+.TP
 Print a help text:
 .B xcm -h
 .PP 
 .SH AUTHOR
 Kai-Uwe Behrmann (ku.b (at) gmx.de)
 .SH COPYRIGHT
-(c) 2011, Kai-Uwe Behrmann
+(c) 2011-2012, Kai-Uwe Behrmann
 .fi
 License: MIT <http://www.opensource.org/licenses/mit-license.php>
 .SH "SEE ALSO"

@@ -51,6 +51,12 @@ void printfHelp(int argc, char ** argv)
                    "         --geometry width_x_height_+_x_+_y]\n");
   fprintf( stderr, "        --id=window_id [--profile filename.icc]\n");
   fprintf( stderr, "\n");
+  fprintf( stderr, "  %s\n",               _("Delete window region:"));
+  fprintf( stderr, "      %s -d\n",argv[0]);
+  fprintf( stderr, "        [-x pos_x -y pos_y --width width --height height|\n"
+                   "         --geometry width_x_height_+_x_+_y]\n");
+  fprintf( stderr, "        --id=window_id\n");
+  fprintf( stderr, "\n");
   fprintf( stderr, "  %s\n",               _("Print a help text:"));
   fprintf( stderr, "      %s -h\n",        argv[0]);
   fprintf( stderr, "\n");
