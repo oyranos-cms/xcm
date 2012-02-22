@@ -2,6 +2,11 @@
   TARGET_DDC = $(TARGET)ddc
 #endif
 
+#ifdef X11
+  TARGET_XCM = $(TARGET)
+  TARGET_XCMEV = $(TARGET)events
+#endif
+
 COLLECT = ar cru
 RANLIB = ranlib
 LNK = ln -s
@@ -116,7 +121,7 @@ ALL_FILES = \
 
 # build all what is needed to run the libraries, helpers
 all:	config.log.h mkdepend \
-	$(TARGET_MINI) $(TARGET_MINI)events $(TARGET_MINI)edid $(TARGET_DDC)
+	$(TARGET_XCM) $(TARGET_XCMEV) $(TARGET_MINI)edid $(TARGET_DDC)
 	echo ... $@ done
 
 # get time stamp
@@ -191,11 +196,15 @@ install-bin:	install_bin
 install_bin:	all
 	echo Installing binaries ...
 	mkdir -p $(DESTDIR)$(bindir)
+#ifdef X11
 	$(INSTALL) -m 755 $(TARGET_MINI)events $(DESTDIR)$(bindir)
-	$(INSTALL) -m 755 $(TARGET_MINI)edid $(DESTDIR)$(bindir)
-	-$(INSTALL) -m 755 $(TARGET_MINI)ddc $(DESTDIR)$(bindir)
-	-mkdir -p $(DESTDIR)/lib/udev/rules.d/
 	$(INSTALL) -m 755 $(TARGET_MINI) $(DESTDIR)$(bindir)
+#endif
+	$(INSTALL) -m 755 $(TARGET_MINI)edid $(DESTDIR)$(bindir)
+#ifdef LINUX
+	$(INSTALL) -m 755 $(TARGET_MINI)ddc $(DESTDIR)$(bindir)
+#endif
+	-mkdir -p $(DESTDIR)/lib/udev/rules.d/
 	-$(INSTALL) -m 644 $(UDEV_RULES) $(DESTDIR)/lib/udev/rules.d/
 	echo ... binary Installation finished
 
@@ -264,10 +273,14 @@ uninstall:	uninstall_bin uninstall_docu
 uninstall-bin:
 uninstall_bin:
 	echo Uninstalling binaries ...
+#ifdef X11
 	$(RM) $(DESTDIR)$(bindir)/$(TARGET_MINI)events
-	$(RM) $(DESTDIR)$(bindir)/$(TARGET_MINI)edid
-	-$(RM) $(DESTDIR)$(bindir)/$(TARGET_MINI)ddc
 	$(RM) $(DESTDIR)$(bindir)/$(TARGET_MINI)
+#endif
+	$(RM) $(DESTDIR)$(bindir)/$(TARGET_MINI)edid
+#ifdef LINUX
+	$(RM) $(DESTDIR)$(bindir)/$(TARGET_MINI)ddc
+#endif
 	echo ... done uninstalling binaries
 	
 uninstall-docs:	uninstall_docu
