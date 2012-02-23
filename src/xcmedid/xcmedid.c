@@ -55,8 +55,7 @@ int main(int argc, char ** argv)
   char * txt = 0;
   FILE * fp = 0;
   char * mem = 0;
-  size_t size = 0;
-  int s = 0;
+  size_t size = 0, s = 0;
   int min_args = 1;
   int print_openicc_json = 0,
       print_ppmcie = 0;
@@ -125,6 +124,8 @@ int main(int argc, char ** argv)
       rewind(fp);
       mem = malloc(size);
       s = fread(mem, sizeof(char), size, fp);
+      if(s != size)
+        fprintf(stderr, "Error: fread %lu but should read %lu\n", s, size);
     } else
     {
       fprintf(stderr, "Error: Could not open file - \"%s\"\n", argv[min_args]);
