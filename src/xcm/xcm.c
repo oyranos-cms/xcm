@@ -220,6 +220,8 @@ int main(int argc, char ** argv)
         status = XQueryTree( dpy, root,
                          &root_return, &parent_return,
                          &children_return, &nchildren_return );
+        if(status == 0) fprintf( stderr, "%d: XQueryTree failed\n", __LINE__ );
+          
         wins = (Window*)malloc(sizeof(Window) * nchildren_return );
         memcpy( wins, children_return, sizeof(Window) * nchildren_return );
         XFree( children_return );
@@ -231,8 +233,10 @@ int main(int argc, char ** argv)
           status = XQueryTree( dpy, children_return[i],
                            &root_return, &parent_return,
                            &wins, &wins_n );
+          if(status == 0)fprintf( stderr, "%d: XQueryTree failed\n", __LINE__ );
           status = XGetWindowAttributes( dpy, children_return[i],
                                      &window_attributes_return );
+          if(status == 0)fprintf( stderr, "%d: XQueryTree failed\n", __LINE__ );
           if(window_attributes_return.map_state == IsViewable &&
              parent_return == root)
           {
