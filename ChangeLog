@@ -1,3 +1,38 @@
+Version xcm-0.5.0
+
+Kai-Uwe Behrmann (31):
+	* [core]: add warning
+	* [build]: add ltdl to spec file
+	* [core]: fix compile warnings
+	* [build]: sync spec file with openSUSE
+	* [conf]: resolve XCM_ macro conflict
+	* [build]: skip X11 and LINUX build and install on osX
+	* [conf]: generalise OS detection for Win32
+	* [docu]: describe new xcm -d option
+	* [conf]: support MINGW32
+	* [core]: support colour region removal in xcm
+	* [core]: fix build without Oyranos II
+	* [core]: fix build without Oyranos
+	* [core]: add --ppmcie option to xcmedid
+	* [conf]: bump to 0.5 like libXcm
+	* [conf]: bump libXcm requirement to 0.5
+	* [build]: add xcm_macros.h to package
+	* [core]: rename net-color spec atoms
+	* [core]: fix xcmedid argument order
+	* [core]: move cli parsing macros to header file
+	* [core]: fix xcm region deletion
+	* [docu]: fix xcm man page
+	* [biuld]: install xcm
+	* [build]: add xcm to RPM and makefile
+	* [docu]: add man page for xcm tool
+	* [core]: add --geometry option to renamed xcm tool
+	* [core]: add region option to xcmwindow
+	* [core]: use Oyranos in xcmwindow for more infos
+	* [core]: begin xcmwindow tool
+	* [build]: fix spec file
+	* [build]: more streamlining of spec file
+	* [conf]: bump version
+
 Version xcm-0.4.2
 
 Kai-Uwe Behrmann (6):
