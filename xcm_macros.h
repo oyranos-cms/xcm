@@ -12,7 +12,7 @@
 
 #include "config.h"
 
-#ifdef HAVE_OY
+#ifdef XCM_HAVE_OY
 #include <alpha/oyranos_alpha.h>
 void * fromMD5                       ( const void        * md5_hash,
                                        size_t            * size,
