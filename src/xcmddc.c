@@ -23,9 +23,8 @@ void printfHelp(int argc, char ** argv)
   fprintf( stderr, "\n");
   fprintf( stderr, "%s %s\n",   argv[0],
                                 _("is a EDID from i2c tool"));
-  fprintf( stderr, "  Xcm v%s config: %s devel period: %s\n",
-                  XCM_TOOLS_VERSION_NAME,
-                  XCM_TOOLS_CONFIG_DATE, XCM_TOOLS_DATE );
+  fprintf( stderr, "  %s\n",
+                  PACKAGE_STRING );
   fprintf( stderr, "\n");
   fprintf( stderr, "%s\n",                 _("Usage"));
   fprintf( stderr, "  %s\n",               _("List available i2c->monitor devices:"));

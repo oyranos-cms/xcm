@@ -21,6 +21,7 @@
 #include <X11/extensions/Xfixes.h> /* XserverRegion */
 #include <X11/Xcm/Xcm.h> /* XcolorRegion */
 
+#include "config.h"
 #include "xcm_version.h"
 #include "xcm_macros.h"
 #define OY_DBG_FORMAT_ "%s:%d %s() "
@@ -33,9 +34,8 @@ void printfHelp(int argc, char ** argv)
   fprintf( stderr, "\n");
   fprintf( stderr, "%s %s\n",   argv[0],
                                 _("is a X11 color management client tool"));
-  fprintf( stderr, "  Xcm v%s config: %s devel period: %s\n",
-                  XCM_TOOLS_VERSION_NAME,
-                  XCM_TOOLS_CONFIG_DATE, XCM_TOOLS_DATE );
+  fprintf( stderr, "  %s\n",
+                 PACKAGE_STRING );
   fprintf( stderr, "\n");
   fprintf( stderr, "%s\n",                 _("Usage"));
   fprintf( stderr, "  %s\n",               _("List available windows:"));
@@ -95,7 +95,7 @@ int main(int argc, char ** argv)
   int error;
   XRectangle rec[2] = { { 0,0,0,0 }, { 0,0,0,0 } };
 
-#ifdef HAVE_OY
+#ifdef XCM_HAVE_OY
   char * blob = 0;
   size_t size = 0;
   oyProfile_s * p = 0;
@@ -169,7 +169,7 @@ int main(int argc, char ** argv)
                         exit (0);
   }
 
-#ifdef HAVE_OY
+#ifdef XCM_HAVE_OY
   XcmICCprofileFromMD5FuncSet( fromMD5 );
   XcmICCprofileGetNameFuncSet( getName );
 #endif
@@ -273,7 +273,7 @@ int main(int argc, char ** argv)
   } else if(place_region)
   {
     int need_wait = 1;
-#ifdef HAVE_OY
+#ifdef XCM_HAVE_OY
     /* Upload a ICC profile to X11 root window */
     if(profile_name)
     {
@@ -304,7 +304,7 @@ int main(int argc, char ** argv)
     reg = XFixesCreateRegion( dpy, rec, 1);
 
     region.region = htonl(reg);
-#ifdef HAVE_OY
+#ifdef XCM_HAVE_OY
     if(blob && size)
       memcpy(region.md5, profile->md5, 16);
     else
@@ -398,7 +398,7 @@ int XcolorRegionFind(XcolorRegion * old_regions, unsigned long old_regions_n, Di
 
     for(j = 0; j < nRect; ++j)
     {
-#ifdef HAVE_OY
+#ifdef XCM_HAVE_OY
       if(oy_debug)
         printf( OY_DBG_FORMAT_
                  "reg[%d]: %dx%d+%d+%d %dx%d+%d+%d\n",
@@ -424,7 +424,7 @@ int XcolorRegionFind(XcolorRegion * old_regions, unsigned long old_regions_n, Di
 
 
 
-#ifdef HAVE_OY
+#ifdef XCM_HAVE_OY
 void * fromMD5                       ( const void        * md5_hash,
                                        size_t            * size,
                                        void              *(allocate_func)(size_t) )

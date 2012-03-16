@@ -14,17 +14,9 @@
 #include <X11/Xcm/XcmEvents.h>
 
 #include "config.h"
+#include "xcm_version.h"
+#include "xcm_macros.h"
 
-#ifdef HAVE_OY
-#include <alpha/oyranos_alpha.h>
-void * fromMD5                       ( const void        * md5_hash,
-                                       size_t            * size,
-                                       void              *(allocate_func)(size_t) );
-char * getName                       ( const void        * data,
-                                       size_t              size,
-                                       void              *(allocate_func)(size_t),
-                                       int                 file_name );
-#endif
 
 int main(int argc, char *argv[])
 {
@@ -33,7 +25,7 @@ int main(int argc, char *argv[])
   if(argc > 2 && strcmp(argv[1],"-display") == 0)
     display_name = argv[2];
 
-#ifdef HAVE_OY
+#ifdef XCM_HAVE_OY
   XcmICCprofileFromMD5FuncSet( fromMD5 );
   XcmICCprofileGetNameFuncSet( getName );
 #endif
@@ -52,7 +44,7 @@ int main(int argc, char *argv[])
   return 0;
 }
 
-#ifdef HAVE_OY
+#ifdef XCM_HAVE_OY
 void * fromMD5                       ( const void        * md5_hash,
                                        size_t            * size,
                                        void              *(allocate_func)(size_t) )
