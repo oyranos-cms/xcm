@@ -4,15 +4,13 @@ ACLOCAL_AMFLAGS = -I m4
 
 SUBDIRS = src
 
-pkginclude_HEADERS = \
-	xcm_macros.h
-
 man_MANS = \
 	man/xcm.1 man/xcmddc.1 man/xcmedid.1 \
 	man/xcmevents.1 
 
 EXTRA_DIST = ${man_MANS} \
-	xcm_control.in
+	xcm_control.in \
+	xcm_macros.h
 
 RPMARCH=`rpmbuild --showrc | awk '/^build arch/ {print $$4}'`
 
