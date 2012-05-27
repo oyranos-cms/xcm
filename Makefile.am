@@ -10,7 +10,14 @@ man_MANS = \
 
 EXTRA_DIST = ${man_MANS} \
 	xcm_control.in \
-	xcm_macros.h
+	xcm_macros.h \
+	scripts/90-xcm-i2c.rules
+
+if HAVE_LINUX
+install-data-hook:
+	$(MKDIR_P) "$(DESTDIR)@udevdir@"
+	-$(INSTALL) -m 0644 $(srcdir)/scripts/90-xcm-i2c.rules "$(DESTDIR)@udevdir@"
+endif
 
 RPMARCH=`rpmbuild --showrc | awk '/^build arch/ {print $$4}'`
 
