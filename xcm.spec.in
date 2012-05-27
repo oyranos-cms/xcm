@@ -1,3 +1,6 @@
+Version:        @PACKAGE_VERSION@
+Release:        0
+Source:         http://sourceforge.net/projects/oyranos/files/Xcm/xcm-@PACKAGE_VERSION@.tar.bz2
 Summary:        X Color Management tools
 Name:           xcm
 License:        MIT
