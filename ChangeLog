@@ -1,3 +1,14 @@
+Version xcm-0.5.1
+
+Kai-Uwe Behrmann (7):
+	* [conf]: add missed version info to spec file
+	* [build]: package udev file again
+	* [conf]: add --with-udev-dir configure option
+	* [conf]: add missing autotools files
+	* [build]: skip install of internal header
+	* [build]: switch to autotools part II
+	* [build]: switch to autotools part I
+
 Version xcm-0.5.0
 
 Kai-Uwe Behrmann (31):
