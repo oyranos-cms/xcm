@@ -107,10 +107,17 @@ LINUX="`uname | grep Linux | wc -l`"
 if [[ $LINUX = "1" ]]; then
 	HAVE_LINUX="#define XCM_HAVE_LINUX 1"
 	AM_CONDITIONAL([HAVE_LINUX], [true])
+        udevdir="/lib/udev/rules.d/"
+        AC_ARG_WITH([udev-dir],
+            AS_HELP_STRING([--with-udev-dir=DIR],[Directory where udev expects helper programs to be located]),
+            [udevdir="$with_udev_dir"])
+        AC_SUBST([udevdir], [$udevdir])
 else
 	HAVE_LINUX=
 	AM_CONDITIONAL([HAVE_LINUX], [false])
 fi
+
+
 
 AC_CONFIG_FILES([Makefile src/Makefile xcm.spec xcm_version.h])
 AC_OUTPUT
@@ -146,5 +153,6 @@ echo "libdir          =       $libdir"
 echo "includedir      =       $includedir"
 echo "datadir         =       $datadir"
 echo "mandir          =       $mandir"
+echo "udevdir         =       $udevdir"
 echo "pixmapdir       =       $pixmapdir"
 echo "desktopdir      =       $desktopdir"

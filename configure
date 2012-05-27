@@ -755,6 +755,7 @@ ac_subst_vars='am__EXEEXT_FALSE
 am__EXEEXT_TRUE
 LTLIBOBJS
 LIBOBJS
+udevdir
 HAVE_LINUX_FALSE
 HAVE_LINUX_TRUE
 RPMBUILD
@@ -774,8 +775,6 @@ libXfixes_LIBS
 libXfixes_CFLAGS
 libX11_LIBS
 libX11_CFLAGS
-PKG_CONFIG_LIBDIR
-PKG_CONFIG_PATH
 PKG_CONFIG
 HAVE_OY
 HAVE_LINUX
@@ -905,6 +904,7 @@ enable_libtool_lock
 enable_silent_rules
 with_x11
 with_oyranos
+with_udev_dir
 '
       ac_precious_vars='build_alias
 host_alias
@@ -916,8 +916,6 @@ LIBS
 CPPFLAGS
 CPP
 PKG_CONFIG
-PKG_CONFIG_PATH
-PKG_CONFIG_LIBDIR
 libX11_CFLAGS
 libX11_LIBS
 libXfixes_CFLAGS
@@ -1566,6 +1564,8 @@ Optional Packages:
   --with-gnu-ld           assume the C compiler uses GNU ld [default=no]
   --with-x11              enable x11 support
   --with-oyranos          enable oyranos
+  --with-udev-dir=DIR     Directory where udev expects helper programs to be
+                          located
 
 Some influential environment variables:
   CC          C compiler command
@@ -1577,10 +1577,6 @@ Some influential environment variables:
               you have headers in a nonstandard directory <include dir>
   CPP         C preprocessor
   PKG_CONFIG  path to pkg-config utility
-  PKG_CONFIG_PATH
-              directories to add to pkg-config's search path
-  PKG_CONFIG_LIBDIR
-              path overriding pkg-config's built-in search path
   libX11_CFLAGS
               C compiler flags for libX11, overriding pkg-config
   libX11_LIBS linker flags for libX11, overriding pkg-config
@@ -4623,13 +4619,13 @@ if ${lt_cv_nm_interface+:} false; then :
 else
   lt_cv_nm_interface="BSD nm"
   echo "int some_variable = 0;" > conftest.$ac_ext
-  (eval echo "\"\$as_me:4626: $ac_compile\"" >&5)
+  (eval echo "\"\$as_me:4622: $ac_compile\"" >&5)
   (eval "$ac_compile" 2>conftest.err)
   cat conftest.err >&5
-  (eval echo "\"\$as_me:4629: $NM \\\"conftest.$ac_objext\\\"\"" >&5)
+  (eval echo "\"\$as_me:4625: $NM \\\"conftest.$ac_objext\\\"\"" >&5)
   (eval "$NM \"conftest.$ac_objext\"" 2>conftest.err > conftest.out)
   cat conftest.err >&5
-  (eval echo "\"\$as_me:4632: output\"" >&5)
+  (eval echo "\"\$as_me:4628: output\"" >&5)
   cat conftest.out >&5
   if $GREP 'External.*some_variable' conftest.out > /dev/null; then
     lt_cv_nm_interface="MS dumpbin"
@@ -5835,7 +5831,7 @@ ia64-*-hpux*)
   ;;
 *-*-irix6*)
   # Find out which ABI we are using.
-  echo '#line 5838 "configure"' > conftest.$ac_ext
+  echo '#line 5834 "configure"' > conftest.$ac_ext
   if { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_compile\""; } >&5
   (eval $ac_compile) 2>&5
   ac_status=$?
@@ -7305,6 +7301,10 @@ _lt_linker_boilerplate=`cat conftest.err`
 $RM -r conftest*
 
 
+## CAVEAT EMPTOR:
+## There is no encapsulation within the following macros, do not change
+## the running order or otherwise move them around unless you know exactly
+## what you are doing...
 if test -n "$compiler"; then
 
 lt_prog_compiler_no_builtin_flag=
@@ -10566,10 +10566,6 @@ $as_echo "$with_x11" >&6; }
 if test "$with_x11" = "yes"; then
 
 
-
-
-
-
 if test "x$ac_cv_env_PKG_CONFIG_set" != "xset"; then
 	if test -n "$ac_tool_prefix"; then
   # Extract the first word of "${ac_tool_prefix}pkg-config", so it can be a program name with args.
@@ -10682,6 +10678,7 @@ $as_echo "yes" >&6; }
 $as_echo "no" >&6; }
 		PKG_CONFIG=""
 	fi
+
 fi
 if test -n "$PKG_CONFIG" && \
     { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"x11\""; } >&5
@@ -10695,10 +10692,11 @@ pkg_failed=no
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for libX11" >&5
 $as_echo_n "checking for libX11... " >&6; }
 
-if test -n "$libX11_CFLAGS"; then
-    pkg_cv_libX11_CFLAGS="$libX11_CFLAGS"
- elif test -n "$PKG_CONFIG"; then
-    if test -n "$PKG_CONFIG" && \
+if test -n "$PKG_CONFIG"; then
+    if test -n "$libX11_CFLAGS"; then
+        pkg_cv_libX11_CFLAGS="$libX11_CFLAGS"
+    else
+        if test -n "$PKG_CONFIG" && \
     { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"x11\""; } >&5
   ($PKG_CONFIG --exists --print-errors "x11") 2>&5
   ac_status=$?
@@ -10708,13 +10706,15 @@ if test -n "$libX11_CFLAGS"; then
 else
   pkg_failed=yes
 fi
- else
-    pkg_failed=untried
+    fi
+else
+	pkg_failed=untried
 fi
-if test -n "$libX11_LIBS"; then
-    pkg_cv_libX11_LIBS="$libX11_LIBS"
- elif test -n "$PKG_CONFIG"; then
-    if test -n "$PKG_CONFIG" && \
+if test -n "$PKG_CONFIG"; then
+    if test -n "$libX11_LIBS"; then
+        pkg_cv_libX11_LIBS="$libX11_LIBS"
+    else
+        if test -n "$PKG_CONFIG" && \
     { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"x11\""; } >&5
   ($PKG_CONFIG --exists --print-errors "x11") 2>&5
   ac_status=$?
@@ -10724,15 +10724,14 @@ if test -n "$libX11_LIBS"; then
 else
   pkg_failed=yes
 fi
- else
-    pkg_failed=untried
+    fi
+else
+	pkg_failed=untried
 fi
 
 
 
 if test $pkg_failed = yes; then
-   	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
 
 if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
         _pkg_short_errors_supported=yes
@@ -10740,9 +10739,9 @@ else
         _pkg_short_errors_supported=no
 fi
         if test $_pkg_short_errors_supported = yes; then
-	        libX11_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "x11" 2>&1`
+	        libX11_PKG_ERRORS=`$PKG_CONFIG --short-errors --errors-to-stdout --print-errors "x11"`
         else
-	        libX11_PKG_ERRORS=`$PKG_CONFIG --print-errors "x11" 2>&1`
+	        libX11_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "x11"`
         fi
 	# Put the nasty error message in config.log where it belongs
 	echo "$libX11_PKG_ERRORS" >&5
@@ -10756,10 +10755,9 @@ installed software in a non-standard prefix.
 
 Alternatively, you may set the environment variables libX11_CFLAGS
 and libX11_LIBS to avoid the need to call pkg-config.
-See the pkg-config man page for more details." "$LINENO" 5
+See the pkg-config man page for more details.
+" "$LINENO" 5
 elif test $pkg_failed = untried; then
-     	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
 	{ { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
 $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
 as_fn_error $? "The pkg-config script could not be found or is too old.  Make sure it
@@ -10777,17 +10775,18 @@ else
 	libX11_LIBS=$pkg_cv_libX11_LIBS
         { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
-
+	:
 fi
 
 pkg_failed=no
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for libXfixes" >&5
 $as_echo_n "checking for libXfixes... " >&6; }
 
-if test -n "$libXfixes_CFLAGS"; then
-    pkg_cv_libXfixes_CFLAGS="$libXfixes_CFLAGS"
- elif test -n "$PKG_CONFIG"; then
-    if test -n "$PKG_CONFIG" && \
+if test -n "$PKG_CONFIG"; then
+    if test -n "$libXfixes_CFLAGS"; then
+        pkg_cv_libXfixes_CFLAGS="$libXfixes_CFLAGS"
+    else
+        if test -n "$PKG_CONFIG" && \
     { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"xfixes\""; } >&5
   ($PKG_CONFIG --exists --print-errors "xfixes") 2>&5
   ac_status=$?
@@ -10797,13 +10796,15 @@ if test -n "$libXfixes_CFLAGS"; then
 else
   pkg_failed=yes
 fi
- else
-    pkg_failed=untried
+    fi
+else
+	pkg_failed=untried
 fi
-if test -n "$libXfixes_LIBS"; then
-    pkg_cv_libXfixes_LIBS="$libXfixes_LIBS"
- elif test -n "$PKG_CONFIG"; then
-    if test -n "$PKG_CONFIG" && \
+if test -n "$PKG_CONFIG"; then
+    if test -n "$libXfixes_LIBS"; then
+        pkg_cv_libXfixes_LIBS="$libXfixes_LIBS"
+    else
+        if test -n "$PKG_CONFIG" && \
     { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"xfixes\""; } >&5
   ($PKG_CONFIG --exists --print-errors "xfixes") 2>&5
   ac_status=$?
@@ -10813,15 +10814,14 @@ if test -n "$libXfixes_LIBS"; then
 else
   pkg_failed=yes
 fi
- else
-    pkg_failed=untried
+    fi
+else
+	pkg_failed=untried
 fi
 
 
 
 if test $pkg_failed = yes; then
-   	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
 
 if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
         _pkg_short_errors_supported=yes
@@ -10829,9 +10829,9 @@ else
         _pkg_short_errors_supported=no
 fi
         if test $_pkg_short_errors_supported = yes; then
-	        libXfixes_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "xfixes" 2>&1`
+	        libXfixes_PKG_ERRORS=`$PKG_CONFIG --short-errors --errors-to-stdout --print-errors "xfixes"`
         else
-	        libXfixes_PKG_ERRORS=`$PKG_CONFIG --print-errors "xfixes" 2>&1`
+	        libXfixes_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "xfixes"`
         fi
 	# Put the nasty error message in config.log where it belongs
 	echo "$libXfixes_PKG_ERRORS" >&5
@@ -10845,10 +10845,9 @@ installed software in a non-standard prefix.
 
 Alternatively, you may set the environment variables libXfixes_CFLAGS
 and libXfixes_LIBS to avoid the need to call pkg-config.
-See the pkg-config man page for more details." "$LINENO" 5
+See the pkg-config man page for more details.
+" "$LINENO" 5
 elif test $pkg_failed = untried; then
-     	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
 	{ { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
 $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
 as_fn_error $? "The pkg-config script could not be found or is too old.  Make sure it
@@ -10866,17 +10865,18 @@ else
 	libXfixes_LIBS=$pkg_cv_libXfixes_LIBS
         { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
-
+	:
 fi
 
 pkg_failed=no
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for libXmu" >&5
 $as_echo_n "checking for libXmu... " >&6; }
 
-if test -n "$libXmu_CFLAGS"; then
-    pkg_cv_libXmu_CFLAGS="$libXmu_CFLAGS"
- elif test -n "$PKG_CONFIG"; then
-    if test -n "$PKG_CONFIG" && \
+if test -n "$PKG_CONFIG"; then
+    if test -n "$libXmu_CFLAGS"; then
+        pkg_cv_libXmu_CFLAGS="$libXmu_CFLAGS"
+    else
+        if test -n "$PKG_CONFIG" && \
     { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"xmu\""; } >&5
   ($PKG_CONFIG --exists --print-errors "xmu") 2>&5
   ac_status=$?
@@ -10886,13 +10886,15 @@ if test -n "$libXmu_CFLAGS"; then
 else
   pkg_failed=yes
 fi
- else
-    pkg_failed=untried
+    fi
+else
+	pkg_failed=untried
 fi
-if test -n "$libXmu_LIBS"; then
-    pkg_cv_libXmu_LIBS="$libXmu_LIBS"
- elif test -n "$PKG_CONFIG"; then
-    if test -n "$PKG_CONFIG" && \
+if test -n "$PKG_CONFIG"; then
+    if test -n "$libXmu_LIBS"; then
+        pkg_cv_libXmu_LIBS="$libXmu_LIBS"
+    else
+        if test -n "$PKG_CONFIG" && \
     { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"xmu\""; } >&5
   ($PKG_CONFIG --exists --print-errors "xmu") 2>&5
   ac_status=$?
@@ -10902,15 +10904,14 @@ if test -n "$libXmu_LIBS"; then
 else
   pkg_failed=yes
 fi
- else
-    pkg_failed=untried
+    fi
+else
+	pkg_failed=untried
 fi
 
 
 
 if test $pkg_failed = yes; then
-   	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
 
 if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
         _pkg_short_errors_supported=yes
@@ -10918,9 +10919,9 @@ else
         _pkg_short_errors_supported=no
 fi
         if test $_pkg_short_errors_supported = yes; then
-	        libXmu_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "xmu" 2>&1`
+	        libXmu_PKG_ERRORS=`$PKG_CONFIG --short-errors --errors-to-stdout --print-errors "xmu"`
         else
-	        libXmu_PKG_ERRORS=`$PKG_CONFIG --print-errors "xmu" 2>&1`
+	        libXmu_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "xmu"`
         fi
 	# Put the nasty error message in config.log where it belongs
 	echo "$libXmu_PKG_ERRORS" >&5
@@ -10934,10 +10935,9 @@ installed software in a non-standard prefix.
 
 Alternatively, you may set the environment variables libXmu_CFLAGS
 and libXmu_LIBS to avoid the need to call pkg-config.
-See the pkg-config man page for more details." "$LINENO" 5
+See the pkg-config man page for more details.
+" "$LINENO" 5
 elif test $pkg_failed = untried; then
-     	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
 	{ { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
 $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
 as_fn_error $? "The pkg-config script could not be found or is too old.  Make sure it
@@ -10955,7 +10955,7 @@ else
 	libXmu_LIBS=$pkg_cv_libXmu_LIBS
         { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
-
+	:
 fi
 	 if true; then
   HAVE_X11_TRUE=
@@ -11027,10 +11027,11 @@ pkg_failed=no
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for liboyranos" >&5
 $as_echo_n "checking for liboyranos... " >&6; }
 
-if test -n "$liboyranos_CFLAGS"; then
-    pkg_cv_liboyranos_CFLAGS="$liboyranos_CFLAGS"
- elif test -n "$PKG_CONFIG"; then
-    if test -n "$PKG_CONFIG" && \
+if test -n "$PKG_CONFIG"; then
+    if test -n "$liboyranos_CFLAGS"; then
+        pkg_cv_liboyranos_CFLAGS="$liboyranos_CFLAGS"
+    else
+        if test -n "$PKG_CONFIG" && \
     { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"oyranos\""; } >&5
   ($PKG_CONFIG --exists --print-errors "oyranos") 2>&5
   ac_status=$?
@@ -11040,13 +11041,15 @@ if test -n "$liboyranos_CFLAGS"; then
 else
   pkg_failed=yes
 fi
- else
-    pkg_failed=untried
+    fi
+else
+	pkg_failed=untried
 fi
-if test -n "$liboyranos_LIBS"; then
-    pkg_cv_liboyranos_LIBS="$liboyranos_LIBS"
- elif test -n "$PKG_CONFIG"; then
-    if test -n "$PKG_CONFIG" && \
+if test -n "$PKG_CONFIG"; then
+    if test -n "$liboyranos_LIBS"; then
+        pkg_cv_liboyranos_LIBS="$liboyranos_LIBS"
+    else
+        if test -n "$PKG_CONFIG" && \
     { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"oyranos\""; } >&5
   ($PKG_CONFIG --exists --print-errors "oyranos") 2>&5
   ac_status=$?
@@ -11056,15 +11059,14 @@ if test -n "$liboyranos_LIBS"; then
 else
   pkg_failed=yes
 fi
- else
-    pkg_failed=untried
+    fi
+else
+	pkg_failed=untried
 fi
 
 
 
 if test $pkg_failed = yes; then
-   	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
 
 if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
         _pkg_short_errors_supported=yes
@@ -11072,9 +11074,9 @@ else
         _pkg_short_errors_supported=no
 fi
         if test $_pkg_short_errors_supported = yes; then
-	        liboyranos_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "oyranos" 2>&1`
+	        liboyranos_PKG_ERRORS=`$PKG_CONFIG --short-errors --errors-to-stdout --print-errors "oyranos"`
         else
-	        liboyranos_PKG_ERRORS=`$PKG_CONFIG --print-errors "oyranos" 2>&1`
+	        liboyranos_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "oyranos"`
         fi
 	# Put the nasty error message in config.log where it belongs
 	echo "$liboyranos_PKG_ERRORS" >&5
@@ -11088,10 +11090,9 @@ installed software in a non-standard prefix.
 
 Alternatively, you may set the environment variables liboyranos_CFLAGS
 and liboyranos_LIBS to avoid the need to call pkg-config.
-See the pkg-config man page for more details." "$LINENO" 5
+See the pkg-config man page for more details.
+" "$LINENO" 5
 elif test $pkg_failed = untried; then
-     	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
 	{ { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
 $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
 as_fn_error $? "The pkg-config script could not be found or is too old.  Make sure it
@@ -11109,7 +11110,7 @@ else
 	liboyranos_LIBS=$pkg_cv_liboyranos_LIBS
         { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
-
+	:
 fi
 	 if true; then
   HAVE_OY_TRUE=
@@ -11166,10 +11167,11 @@ pkg_failed=no
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for libXcm" >&5
 $as_echo_n "checking for libXcm... " >&6; }
 
-if test -n "$libXcm_CFLAGS"; then
-    pkg_cv_libXcm_CFLAGS="$libXcm_CFLAGS"
- elif test -n "$PKG_CONFIG"; then
-    if test -n "$PKG_CONFIG" && \
+if test -n "$PKG_CONFIG"; then
+    if test -n "$libXcm_CFLAGS"; then
+        pkg_cv_libXcm_CFLAGS="$libXcm_CFLAGS"
+    else
+        if test -n "$PKG_CONFIG" && \
     { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"xcm\""; } >&5
   ($PKG_CONFIG --exists --print-errors "xcm") 2>&5
   ac_status=$?
@@ -11179,13 +11181,15 @@ if test -n "$libXcm_CFLAGS"; then
 else
   pkg_failed=yes
 fi
- else
-    pkg_failed=untried
+    fi
+else
+	pkg_failed=untried
 fi
-if test -n "$libXcm_LIBS"; then
-    pkg_cv_libXcm_LIBS="$libXcm_LIBS"
- elif test -n "$PKG_CONFIG"; then
-    if test -n "$PKG_CONFIG" && \
+if test -n "$PKG_CONFIG"; then
+    if test -n "$libXcm_LIBS"; then
+        pkg_cv_libXcm_LIBS="$libXcm_LIBS"
+    else
+        if test -n "$PKG_CONFIG" && \
     { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"xcm\""; } >&5
   ($PKG_CONFIG --exists --print-errors "xcm") 2>&5
   ac_status=$?
@@ -11195,15 +11199,14 @@ if test -n "$libXcm_LIBS"; then
 else
   pkg_failed=yes
 fi
- else
-    pkg_failed=untried
+    fi
+else
+	pkg_failed=untried
 fi
 
 
 
 if test $pkg_failed = yes; then
-   	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
 
 if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
         _pkg_short_errors_supported=yes
@@ -11211,9 +11214,9 @@ else
         _pkg_short_errors_supported=no
 fi
         if test $_pkg_short_errors_supported = yes; then
-	        libXcm_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "xcm" 2>&1`
+	        libXcm_PKG_ERRORS=`$PKG_CONFIG --short-errors --errors-to-stdout --print-errors "xcm"`
         else
-	        libXcm_PKG_ERRORS=`$PKG_CONFIG --print-errors "xcm" 2>&1`
+	        libXcm_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "xcm"`
         fi
 	# Put the nasty error message in config.log where it belongs
 	echo "$libXcm_PKG_ERRORS" >&5
@@ -11227,10 +11230,9 @@ installed software in a non-standard prefix.
 
 Alternatively, you may set the environment variables libXcm_CFLAGS
 and libXcm_LIBS to avoid the need to call pkg-config.
-See the pkg-config man page for more details." "$LINENO" 5
+See the pkg-config man page for more details.
+" "$LINENO" 5
 elif test $pkg_failed = untried; then
-     	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
 	{ { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
 $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
 as_fn_error $? "The pkg-config script could not be found or is too old.  Make sure it
@@ -11248,7 +11250,7 @@ else
 	libXcm_LIBS=$pkg_cv_libXcm_LIBS
         { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
-
+	:
 fi
 	 if true; then
   HAVE_XCM_TRUE=
@@ -11336,6 +11338,15 @@ else
   HAVE_LINUX_FALSE=
 fi
 
+        udevdir="/lib/udev/rules.d/"
+
+# Check whether --with-udev-dir was given.
+if test "${with_udev_dir+set}" = set; then :
+  withval=$with_udev_dir; udevdir="$with_udev_dir"
+fi
+
+        udevdir=$udevdir
+
 else
 	HAVE_LINUX=
 	 if false; then
@@ -11347,6 +11358,8 @@ else
 fi
 
 fi
+
+
 
 ac_config_files="$ac_config_files Makefile src/Makefile xcm.spec xcm_version.h"
 
@@ -13776,5 +13789,6 @@ echo "libdir          =       $libdir"
 echo "includedir      =       $includedir"
 echo "datadir         =       $datadir"
 echo "mandir          =       $mandir"
+echo "udevdir         =       $udevdir"
 echo "pixmapdir       =       $pixmapdir"
 echo "desktopdir      =       $desktopdir"
