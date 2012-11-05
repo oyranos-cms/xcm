@@ -173,7 +173,10 @@ int main(int argc, char ** argv)
       }
 
       if(identify != 0)
-        printf( "%d\n", error );
+      {
+        printf( "%s\n", XcmDDCErrorToString(error));
+        return error;
+      }
     }
   }
 
