@@ -6,7 +6,7 @@ SUBSYSTEM=="i2c", RUN+="/sbin/modprobe -bv i2c-dev"
 
 
 # blindly set group and mode
-KERNEL=="i2c-[0-9]*", ACTION=="add", GROUP="video", MODE="0666"
+#KERNEL=="i2c-[0-9]*", ACTION=="add"
 
 # FIXME: match only DDC devices
-KERNEL=="i2c-[0-9]*", ACTION=="add", PROGRAM=="xcmddc --i2c /dev/%k --identify", RESULT=="0", GROUP="video"
+KERNEL=="i2c-[0-9]*", ACTION=="add", PROGRAM=="/bin/xcmddc --i2c /dev/%k --identify", RESULT=="0", GROUP="video", MODE="0660"
