@@ -1,3 +1,13 @@
+Version xcm-0.5.2
+
+Kai-Uwe Behrmann (3):
+	* [conf]: adjust xcmddc path
+	* [core]: return proper status in xcmddc
+	* [conf]: bump version to 0.5.2
+
+VSE (1):
+	* [conf]: Fix xcm udev rule
+
 Version xcm-0.5.1
 
 Kai-Uwe Behrmann (7):
