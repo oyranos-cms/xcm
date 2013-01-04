@@ -13,7 +13,7 @@
 #include "config.h"
 
 #ifdef XCM_HAVE_OY
-#include <alpha/oyranos_alpha.h>
+#include <oyProfile_s.h>
 void * fromMD5                       ( const void        * md5_hash,
                                        size_t            * size,
                                        void              *(allocate_func)(size_t) );
