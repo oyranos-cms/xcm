@@ -51,7 +51,7 @@ void printfHelp(int argc, char ** argv)
                    "         --geometry width_x_height_+_x_+_y]\n");
   fprintf( stderr, "        --id=window_id [--profile filename.icc]\n");
   fprintf( stderr, "\n");
-  fprintf( stderr, "  %s\n",               _("Delete window region:"));
+  fprintf( stderr, "  %s\n",               _("Release window region:"));
   fprintf( stderr, "      %s -d\n",argv[0]);
   fprintf( stderr, "        [-x pos_x -y pos_y --width width --height height|\n"
                    "         --geometry width_x_height_+_x_+_y]\n");
@@ -84,7 +84,7 @@ int main(int argc, char ** argv)
          root;
 
   int place_region = 0;
-  int delete_region = 0;
+  int release_region = 0;
   int x = 0, y = 0, width = 0, height = 0;
   const char * profile_name = NULL;
   int verbose = 0;
@@ -118,7 +118,7 @@ int main(int argc, char ** argv)
             for(i = 1; pos < argc && i < strlen(argv[pos]); ++i)
             switch (argv[pos][i])
             {
-              case 'd': delete_region = 1; break;
+              case 'd': release_region = 1; break;
               case 'l': list_windows = 1; break;
               case 'p': print = 1; break;
               case 'r': place_region = 1; break;
@@ -329,11 +329,11 @@ int main(int argc, char ** argv)
       if(nRegions && r)
       {
         error = XcolorRegionDelete( dpy, win, 0, nRegions );
-        fprintf(stderr, "deleted %lu region%c\n", nRegions, nRegions==1?' ':'s');
+        fprintf(stderr, "released %lu region%c\n", nRegions, nRegions==1?' ':'s');
         XFree( r ); r = 0;
       } else
       {
-        fprintf(stderr, "no region to delete \n");
+        fprintf(stderr, "no region to release \n");
       }
     }
 
@@ -344,7 +344,7 @@ int main(int argc, char ** argv)
     if(need_wait)
       while(1) sleep(2);
 
-  } if(delete_region)
+  } if(release_region)
   {
     XcolorRegion *old_regions = 0;
     unsigned long old_regions_n = 0;
@@ -357,10 +357,10 @@ int main(int argc, char ** argv)
     XFree( old_regions );
     if(pos >= 0)
     {
-      int undeleted_n = old_regions_n;
+      int unreleased_n = old_regions_n;
       XcolorRegionDelete( dpy, win, pos, 1 );
       old_regions = XcolorRegionFetch( dpy, win, &old_regions_n );
-      if(undeleted_n - old_regions_n != 1)
+      if(unreleased_n - old_regions_n != 1)
         printf(  OY_DBG_FORMAT_"removed %d; have still %d\n", OY_DBG_ARGS_,
                  pos, (int)old_regions_n );
       else
