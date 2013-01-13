@@ -191,12 +191,13 @@ int main(int argc, char ** argv)
                _("argument not recognised"), geometry);
       exit(1);
     }
-
-    rec[0].x = x;
-    rec[0].y = y;
-    rec[0].width = width;
-    rec[0].height = height;
   }
+
+  /* copy geometry taken by --geometry or othe rarguments */
+  rec[0].x = x;
+  rec[0].y = y;
+  rec[0].width = width;
+  rec[0].height = height;
 
   win = (Window) id;
   screen = DefaultScreen( dpy );
