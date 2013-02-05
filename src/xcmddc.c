@@ -5,7 +5,7 @@
  *  @par License: 
  *             MIT <http://www.opensource.org/licenses/mit-license.php>
  *  @par Copyright:
- *             (c) 2010 - Kai-Uwe Behrmann <ku.b@gmx.de>
+ *             (c) 2010-2012 Kai-Uwe Behrmann <ku.b@gmx.de>
  *
  */
 

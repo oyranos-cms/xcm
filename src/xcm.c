@@ -6,7 +6,7 @@
  *  @par License: 
  *             MIT <http://www.opensource.org/licenses/mit-license.php>
  *  @par Copyright:
- *             (c) 2011 - Kai-Uwe Behrmann <ku.b@gmx.de>
+ *             (c) 2011-2013 Kai-Uwe Behrmann <ku.b@gmx.de>
  *
  *  gcc -Wall -g -I../.. xcm.c -o xcm `pkg-config --cflags --libs x11 xcm oyranos`
  */
