@@ -241,9 +241,6 @@ int main(int argc, char ** argv)
           if(window_attributes_return.map_state == IsViewable &&
              parent_return == root)
           {
-            if(verbose)
-              fprintf( stdout, "%s",
-                       XcmePrintWindowRegions( dpy, children_return[i], 0 ));
             fprintf( stdout, "%d", (int)children_return[i] );
             if(print_window_name)
               fprintf( stdout, "  %s",
