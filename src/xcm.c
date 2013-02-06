@@ -15,11 +15,13 @@
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h> /* sleep() */
+#include <arpa/inet.h> /* ntohl() */
 
 #include <X11/Xcm/Xcm.h>
 #include <X11/Xcm/XcmEvents.h>
 #include <X11/extensions/Xfixes.h> /* XserverRegion */
 #include <X11/Xcm/Xcm.h> /* XcolorRegion */
+#include <X11/Xutil.h>   /* NormalState */
 
 #include "config.h"
 #include "xcm_version.h"
@@ -28,6 +30,7 @@
 #define OY_DBG_ARGS_ __FILE__,__LINE__,strrchr(__func__,'/')?strrchr(__func__,'/')+1:__func__
 
 int XcolorRegionFind(XcolorRegion * old_regions, unsigned long old_regions_n, Display * dpy, Window win, XRectangle * rectangle);
+void TraverseXTree( Display * dpy, Window w, Window root, int print_window_name, int level);
 
 void printfHelp(int argc, char ** argv)
 {
@@ -74,7 +77,6 @@ int main(int argc, char ** argv)
   int print = 0;
   int print_window_name = 0;
   int list_windows = 0;
-  int count = 0;
   const char * display = NULL;
   const char * geometry = NULL;
 
@@ -205,55 +207,10 @@ int main(int argc, char ** argv)
 
   if(list_windows)
   {
-    Status status = 0;
     if(!verbose)
     {
-      {
-        Window root_return = 0,
-               parent_return = 0, 
-             * children_return = 0,
-             * wins = 0;
-        unsigned int nchildren_return = 0, wins_n = 0;
-        int i;
-        XWindowAttributes window_attributes_return;
-
-        XSync( dpy, 0 );
-        status = XQueryTree( dpy, root,
-                         &root_return, &parent_return,
-                         &children_return, &nchildren_return );
-        if(status == 0) fprintf( stderr, "%d: XQueryTree failed\n", __LINE__ );
-          
-        wins = (Window*)malloc(sizeof(Window) * nchildren_return );
-        memcpy( wins, children_return, sizeof(Window) * nchildren_return );
-        XFree( children_return );
-        children_return = wins; wins = 0;
-
-        for(i = nchildren_return - 1; i >= 0; --i)
-        {
-          root_return = 0;
-          status = XQueryTree( dpy, children_return[i],
-                           &root_return, &parent_return,
-                           &wins, &wins_n );
-          if(status == 0)fprintf( stderr, "%d: XQueryTree failed\n", __LINE__ );
-          status = XGetWindowAttributes( dpy, children_return[i],
-                                     &window_attributes_return );
-          if(status == 0)fprintf( stderr, "%d: XQueryTree failed\n", __LINE__ );
-          if(window_attributes_return.map_state == IsViewable &&
-             parent_return == root)
-          {
-            fprintf( stdout, "%d", (int)children_return[i] );
-            if(print_window_name)
-              fprintf( stdout, "  %s",
-                       XcmePrintWindowName(dpy, children_return[i]) );
-            fprintf( stdout, "\n" );
-            ++count;
-          }
-
-          XFree( wins );
-        }
-
-        free( children_return );
-      }
+      XSync( dpy, 0 );
+      TraverseXTree( dpy, root, root, print_window_name, 0 );
     } else
     {
       XcmeContext_s * c = XcmeContext_Create( display );
@@ -420,7 +377,58 @@ int XcolorRegionFind(XcolorRegion * old_regions, unsigned long old_regions_n, Di
   return pos;
 }
 
+void TraverseXTree( Display * dpy, Window w, Window root, int print_window_name, int level)
+{
+  Window root_return = 0,
+         parent_return = 0, 
+       * wins = 0;
+  unsigned int wins_n = 0;
+  int i;
+  XWindowAttributes window_attributes_return;
+  Status status = 0;
 
+  Atom atom_wm_state;
+  Atom atom_type = None;
+  int format;
+  unsigned long nitems = 0, after;
+  unsigned char *data = NULL;
+  Window inf;
+
+  status = XQueryTree( dpy, w,
+                       &root_return, &parent_return,
+                       &wins, &wins_n );
+  if(status == 0) fprintf( stderr, "%d: XQueryTree failed\n", __LINE__ );
+  status = XGetWindowAttributes( dpy, w,
+                                 &window_attributes_return );
+  if(status == 0) fprintf( stderr,"%d: XGetWindowAttributes failed\n",__LINE__);
+
+  atom_wm_state = XInternAtom(dpy, "WM_STATE", True);
+  if(atom_wm_state)
+    XGetWindowProperty(dpy, w, atom_wm_state, 0, 2L, False, AnyPropertyType,
+                       &atom_type, &format, &nitems, &after, &data);
+
+  if(window_attributes_return.map_state == IsViewable &&
+     root_return == root && nitems && (*(uint32_t*)data) == NormalState)
+  {
+    int j;
+    for(j = 0; j < level; ++j)
+      fprintf( stdout, "  " );
+    fprintf( stdout, "%d", (int)w );
+    if(print_window_name)
+      fprintf( stdout, "  %s",
+               XcmePrintWindowName(dpy, w) );
+    fprintf( stdout, "\n" );
+  }
+
+  for(i = 0; i < wins_n; ++i)
+    TraverseXTree( dpy, wins[i], root, print_window_name, level+1 );
+
+  if(wins)
+    XFree( wins );
+  if(data)
+    XFree( data );
+
+}
 
 #ifdef XCM_HAVE_OY
 void * fromMD5                       ( const void        * md5_hash,
