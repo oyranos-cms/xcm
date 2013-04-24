@@ -92,6 +92,9 @@ fi
 
 PKG_CHECK_EXISTS([xcm], [
 	PKG_CHECK_MODULES([libXcm], [xcm])
+	PKG_CHECK_MODULES([libXcmEDID], [xcm-edid])
+	PKG_CHECK_MODULES([libXcmDDC], [xcm-ddc])
+	PKG_CHECK_MODULES([libXcmX11], [xcm-x11])
 	AM_CONDITIONAL([HAVE_XCM], [true])
         HAVE_XCM="#define XCM_HAVE_XCM 1"
 ], [
