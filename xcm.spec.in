@@ -1,4 +1,6 @@
-%if %( echo `rpm -q --queryformat %%{version} udev` ) > 190
+%define _udev_version %(rpm -q --queryformat %%{VERSION} udev)
+
+%if 0%{_udev_version} > 190
 %define _udevrulesdir /usr/lib/udev/rules.d
 %else
 %define _udevrulesdir /lib/udev/rules.d
