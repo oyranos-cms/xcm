@@ -1,36 +1,72 @@
+%if %( echo `rpm -q --queryformat %%{version} udev` ) > 190
+%define _udevrulesdir /usr/lib/udev/rules.d
+%else
+%define _udevrulesdir /lib/udev/rules.d
+%endif
+
 Version:        @PACKAGE_VERSION@
 Release:        0
 Source:         http://sourceforge.net/projects/oyranos/files/Xcm/xcm-@PACKAGE_VERSION@.tar.bz2
 Summary:        X Color Management tools
-Name:           xcm
 License:        MIT
 Group:          System/X11/Utilities
+
+Name:           xcm
 URL:            http://www.oyranos.org
 Vendor:         Kai-Uwe Behrmann
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
-Prefix:         %{_prefix}
 
 BuildRequires:  udev
 
 %if 0%{?suse_version} > 0
-BuildRequires:     gcc-c++ pkgconfig    xorg-x11-Mesa xorg-x11-Mesa-devel 
-%endif
-%if 0%{?suse_version} > 910
-BuildRequires:  bash bind-utils binutils bzip2 coreutils cpio cyrus-sasl diffutils e2fsprogs file filesystem findutils gcc gcc-c++ glibc glibc-devel grep groff gzip less libtool make man mktemp patch perl pkgconfig popt readline rpm sed tar timezone unzip util-linux zlib zlib-devel
+BuildRequires:  gcc-c++
+BuildRequires:  libtool
+BuildRequires:  pkgconfig
+BuildRequires:  xorg-x11-Mesa
+BuildRequires:  xorg-x11-Mesa-devel
 %endif
 %if 0%{?suse_version} > 1010
-BuildRequires:  Mesa Mesa-devel gcc-c++ pkgconfig xorg-x11 xorg-x11-devel xorg-x11-libX11 xorg-x11-libX11-devel xorg-x11-libXfixes xorg-x11-libXfixes-devel xorg-x11-libs xorg-x11-util-devel xorg-x11-libXmu-devel libXcm-devel liboyranos-devel 
+BuildRequires:  Mesa
+BuildRequires:  Mesa-devel
+BuildRequires:  gcc-c++
+BuildRequires:  libXcm-devel
+BuildRequires:  liboyranos-devel >= 0.9.3
+BuildRequires:  pkgconfig
+BuildRequires:  xorg-x11
+BuildRequires:  xorg-x11-devel
+BuildRequires:  xorg-x11-libX11
+BuildRequires:  xorg-x11-libX11-devel
+BuildRequires:  xorg-x11-libXfixes
+BuildRequires:  xorg-x11-libXfixes-devel
+BuildRequires:  xorg-x11-libXmu-devel
+BuildRequires:  xorg-x11-libs
+BuildRequires:  xorg-x11-util-devel
 %endif
 %if 0%{?mandriva_version} > 0
-BuildRequires:  Mesa mesagl-devel gcc-c++ pkgconfig libXcm-devel liboyranos-devel libtool-devel
+BuildRequires:  Mesa
+BuildRequires:  gcc-c++
+BuildRequires:  libXcm-devel
+BuildRequires:  liboyranos-devel >= 0.9.3
+BuildRequires:  libtool-devel
+BuildRequires:  mesagl-devel
+BuildRequires:  pkgconfig
 %endif
 %if 0%{?fedora_version} > 0
-BuildRequires:  Mesa Mesa-devel gcc-c++ xorg-x11-devel xorg-x11-Mesa-devel xdg-utils  libXfixes-devel xorg-x11-proto-devel xorg-x11-xtrans-devel libXcm-devel liboyranos-devel libXmu-devel elektra-devel libtool-ltdl-devel
+BuildRequires:  Mesa
+BuildRequires:  Mesa-devel
+BuildRequires:  elektra-devel
+BuildRequires:  gcc-c++
+BuildRequires:  libXcm-devel
+BuildRequires:  libXfixes-devel
+BuildRequires:  libXmu-devel
+BuildRequires:  liboyranos-devel >= 0.9.3
+BuildRequires:  libtool-ltdl-devel
+BuildRequires:  xdg-utils
+BuildRequires:  xorg-x11-Mesa-devel
+BuildRequires:  xorg-x11-devel
+BuildRequires:  xorg-x11-proto-devel
+BuildRequires:  xorg-x11-xtrans-devel
 %endif
-%if 0%{?debian_version} > 0
-BuildRequires: gcc-c++ pkgconfig xorg-x11 xorg-x11-devel xorg-x11-Mesa-devel  xdg-utils  liboyranos-devel
-%endif
-
 
 %description
 The Xcm tools are colour management helpers for Xorg.
@@ -42,7 +78,7 @@ A EDID parser and a colour management events observer are included.
 %setup -n %{name}-%{version}
 
 %build
-%configure --disable-static
+%configure --disable-static --with-udev-dir=%{_udevrulesdir}
 make %{?_smp_mflags}
 
 %install
@@ -62,7 +98,7 @@ rm -fr %{buildroot}/%{_datadir}/doc/%{name}
 %{_mandir}/man1/%{name}ddc.1*
 %{_mandir}/man1/%{name}edid.1*
 %{_mandir}/man1/%{name}events.1*
-/lib/udev/rules.d/90-xcm-i2c.rules
+%{_udevrulesdir}/90-xcm-i2c.rules
 %doc AUTHORS COPYING ChangeLog README
 
 
