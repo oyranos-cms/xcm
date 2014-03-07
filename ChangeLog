@@ -1,3 +1,19 @@
+Version xcm-0.5.3
+
+Kai-Uwe Behrmann (12):
+	* [build]: fix version detection in spec file
+	* [build]: add _udevrulesdir
+	* [build]: reduce library dependencies for some binaries
+	* [build]: remove non needed package requirements from spec
+	* [core]: remove non needed macros
+	* [core]: show number of regions in xcm
+	* [core]: Fix window listing in xcm -l
+	* [core]: remove unused code section
+	* [conf]: bump version
+	* [core]: fix handle of x,y,width and height args
+	* [docu]: rename xcm delete to release
+	* [core]: update includes
+
 Version xcm-0.5.2
 
 Kai-Uwe Behrmann (3):
