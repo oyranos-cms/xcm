@@ -9,13 +9,13 @@ Tools which based on libXcm, a library for color management on X.
 ## Internet
 * sources: [git clone git://github.com/oyranos-cms/xcm](https://github.com/oyranos-cms/xcm)
 * www: [OpenICC](http://www.openicc.info)
-* email: [enail list](http://lists.freedesktop.org/mailman/listinfo/openicc)
+* support: [email list](http://lists.freedesktop.org/mailman/listinfo/openicc)
 
 
 ## Dependencies:
 * [Xorg](http://www.x.org)
-* [libxcm](https://github.com/oyranos-cms/libxcm)
-* [Oyranos](https://github.com/oyranos-cms/oyranos) - optionally
+* [libxcm-dev](https://github.com/oyranos-cms/libxcm)
+* [liboyranos-dev](https://github.com/oyranos-cms/oyranos) - optionally
 
 
 ## Building
