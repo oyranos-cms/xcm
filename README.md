@@ -1,0 +1,25 @@
+# Xcm
+
+Tools which based on libXcm, a library for color management on X.
+* xcmddc:  requests EDID from a monitor over the i2c bus.
+* xcmedid:  is for parsing EDID data blocks. 
+* xcmevents: observes X11 color management events.
+
+
+## Internet
+* sources: [git clone git://github.com/oyranos-cms/xcm](https://github.com/oyranos-cms/xcm)
+* www: [OpenICC](http://www.openicc.info)
+* email: [enail list](http://lists.freedesktop.org/mailman/listinfo/openicc)
+
+
+## Dependencies:
+* [Xorg](http://www.x.org)
+* [libxcm](https://github.com/oyranos-cms/libxcm)
+* [Oyranos](https://github.com/oyranos-cms/oyranos) - optionally
+
+
+## Building
+    $ make
+    $ make install
+
+
