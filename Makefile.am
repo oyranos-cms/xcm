@@ -61,3 +61,4 @@ help:
 	echo "... DESTDIR=\"/user/a/My Install Dir/\" install"
 	echo "... BUILDDIR=../build_local"
 
+dist_doc_DATA = README.md docs/AUTHORS docs/ChangeLog docs/COPYING
