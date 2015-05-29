@@ -18,6 +18,7 @@ URL:            http://www.oyranos.org
 Vendor:         Kai-Uwe Behrmann
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 
+#BuildRequires:  liboyranos-devel >= 0.9.3
 BuildRequires:  udev
 
 %if 0%{?suse_version} > 0
@@ -32,7 +33,6 @@ BuildRequires:  Mesa
 BuildRequires:  Mesa-devel
 BuildRequires:  gcc-c++
 BuildRequires:  libXcm-devel
-BuildRequires:  liboyranos-devel >= 0.9.3
 BuildRequires:  pkgconfig
 BuildRequires:  xorg-x11
 BuildRequires:  xorg-x11-devel
@@ -48,7 +48,6 @@ BuildRequires:  xorg-x11-util-devel
 BuildRequires:  Mesa
 BuildRequires:  gcc-c++
 BuildRequires:  libXcm-devel
-BuildRequires:  liboyranos-devel >= 0.9.3
 BuildRequires:  libtool-devel
 BuildRequires:  mesagl-devel
 BuildRequires:  pkgconfig
@@ -61,7 +60,6 @@ BuildRequires:  gcc-c++
 BuildRequires:  libXcm-devel
 BuildRequires:  libXfixes-devel
 BuildRequires:  libXmu-devel
-BuildRequires:  liboyranos-devel >= 0.9.3
 BuildRequires:  libtool-ltdl-devel
 BuildRequires:  xdg-utils
 BuildRequires:  xorg-x11-Mesa-devel
@@ -101,7 +99,7 @@ rm -fr %{buildroot}/%{_datadir}/doc/%{name}
 %{_mandir}/man1/%{name}edid.1*
 %{_mandir}/man1/%{name}events.1*
 %{_udevrulesdir}/90-xcm-i2c.rules
-%doc AUTHORS COPYING ChangeLog README
+%doc docs/AUTHORS docs/COPYING docs/ChangeLog README.md
 
 
 %changelog
