@@ -174,7 +174,7 @@ int main(int argc, char ** argv)
 
       if(identify != 0)
       {
-        printf( "%s\n", XcmDDCErrorToString(error));
+        printf( "%d\n", error);
         return error;
       }
     }
