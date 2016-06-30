@@ -43,6 +43,7 @@ void printfHelp(int argc, char ** argv)
   fprintf( stderr, "  %s\n",               _("General options:"));
   fprintf( stderr, "        --openicc       %s\n", _("use JSON"));
   fprintf( stderr, "        --ppmcie        %s\n", _("ppcmcie compatible"));
+  fprintf( stderr, "        --svg           %s\n", _("svg compatible"));
   fprintf( stderr, "        -v              %s\n", _("verbose"));
   fprintf( stderr, "\n");
   fprintf( stderr, "\n");
@@ -57,7 +58,8 @@ int main(int argc, char ** argv)
   size_t size = 0, s = 0;
   int min_args = 1;
   int print_openicc_json = 0,
-      print_ppmcie = 0;
+      print_ppmcie = 0,
+      print_svg = 0;
   const char * file_name = NULL;
 #ifndef HAVE_OY
   int verbose = 0;
@@ -87,6 +89,8 @@ int main(int argc, char ** argv)
                         { print_openicc_json = 1; i=100; break; }
                         else if(OY_IS_ARG("ppmcie"))
                         { print_ppmcie = 1; i=100; break; }
+                        else if(OY_IS_ARG("svg"))
+                        { print_svg = 1; i=100; break; }
                         }
                         printfHelp(argc, argv);
                         exit (0);
@@ -176,6 +180,61 @@ int main(int argc, char ** argv)
           else if(strcmp(list[i].key,XCM_EDID_KEY_WHITEy) == 0)
           { fprintf(stdout," %g", list[i].value.dbl); fflush(stdout); }
         }
+      }
+    }
+    else if(print_svg)
+    {
+      XcmEdidKeyValue_s * list = 0;
+      int i = 0, count = 0;
+      err = XcmEdidParse( mem, &list, &count );
+      if(list && count)
+      {
+        fprintf(stderr, "svg:\n");
+        fprintf(stdout, "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n\
+<svg \n\
+   xmlns:dc=\"http://purl.org/dc/elements/1.1/\"\n\
+   xmlns:cc=\"http://creativecommons.org/ns#\"\n\
+   xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"\n\
+   xmlns:svg=\"http://www.w3.org/2000/svg\"\n\
+   xmlns=\"http://www.w3.org/2000/svg\"\n\
+   version=\"1.1\"\n\
+   id=\"svg2\"\n\
+   viewBox=\"0 0 744.09448819 744.09448819\"\n\
+   height=\"210mm\"\n\
+   width=\"210mm\">\n\
+  <g>\n\
+    <path\n\
+       d=\"M ");
+        for(i = 0; i < count; ++i)
+        {
+          if(strcmp(list[i].key,XCM_EDID_KEY_REDx) == 0)
+          { fprintf(stdout," %g,", list[i].value.dbl*744.0); fflush(stdout); }
+          else if(strcmp(list[i].key,XCM_EDID_KEY_REDy) == 0)
+          { fprintf(stdout,"%g", 744-list[i].value.dbl*744.0); fflush(stdout); }
+          else if(strcmp(list[i].key,XCM_EDID_KEY_GREENx) == 0)
+          { fprintf(stdout," %g,", list[i].value.dbl*744.0); fflush(stdout); }
+          else if(strcmp(list[i].key,XCM_EDID_KEY_GREENy) == 0)
+          { fprintf(stdout,"%g", 744-list[i].value.dbl*744.0); fflush(stdout); }
+          else if(strcmp(list[i].key,XCM_EDID_KEY_BLUEx) == 0)
+          { fprintf(stdout," %g,", list[i].value.dbl*744.0); fflush(stdout); }
+          else if(strcmp(list[i].key,XCM_EDID_KEY_BLUEy) == 0)
+          { fprintf(stdout,"%g", 744-list[i].value.dbl*744.0); fflush(stdout); }
+        }
+        fprintf(stdout, " Z\"\n\
+       style=\"fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:5px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1\" />\n\
+    <circle\n\
+       cx=\"");
+        for(i = 0; i < count; ++i)
+        {
+               if(strcmp(list[i].key,XCM_EDID_KEY_WHITEx) == 0)
+          { fprintf(stdout,"%g\"", list[i].value.dbl*744.0); fflush(stdout); }
+          else if(strcmp(list[i].key,XCM_EDID_KEY_WHITEy) == 0)
+          { fprintf(stdout," cy=\"%g\"", 744-list[i].value.dbl*744.0); fflush(stdout); }
+        }
+        fprintf(stdout, " r=\"12.5\"\n\
+       style=\"fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:5px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1\" />\n\
+  </g>\n\
+</svg>");
       }
     }
     else
