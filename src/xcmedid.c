@@ -131,7 +131,7 @@ int main(int argc, char ** argv)
         fprintf(stderr, "Error: fread %lu but should read %lu\n", s, size);
     } else
     {
-      fprintf(stderr, "Error: Could not open file - \"%s\"\n", argv[min_args]);
+      fprintf(stderr, "Error: Could not open file - \"%s\"\n", file_name);
     }
   } else
   {
