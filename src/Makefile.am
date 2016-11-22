@@ -23,3 +23,5 @@ xcmevents_LDADD  = ${libXcmX11_LIBS} ${libX11_LIBS} ${libXfixes_LIBS} \
 	${libXmu_LIBS} $(liboyranos_LIBS) -lm
 endif
 
+bin_PROGRAMS += xcmhextobin
+xcmhextobin_SOURCES = xcmhextobin.c

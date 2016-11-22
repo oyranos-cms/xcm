@@ -78,7 +78,8 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-bin_PROGRAMS = xcmedid$(EXEEXT) $(am__EXEEXT_1) $(am__EXEEXT_2)
+bin_PROGRAMS = xcmedid$(EXEEXT) $(am__EXEEXT_1) $(am__EXEEXT_2) \
+	xcmhextobin$(EXEEXT)
 @HAVE_LINUX_TRUE@am__append_1 = xcmddc
 @HAVE_X11_TRUE@am__append_2 = xcm xcmevents
 subdir = src
@@ -123,6 +124,9 @@ xcmevents_OBJECTS = $(am_xcmevents_OBJECTS)
 @HAVE_X11_TRUE@xcmevents_DEPENDENCIES = $(am__DEPENDENCIES_1) \
 @HAVE_X11_TRUE@	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
 @HAVE_X11_TRUE@	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
+am_xcmhextobin_OBJECTS = xcmhextobin.$(OBJEXT)
+xcmhextobin_OBJECTS = $(am_xcmhextobin_OBJECTS)
+xcmhextobin_LDADD = $(LDADD)
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -158,9 +162,10 @@ am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
 SOURCES = $(xcm_SOURCES) $(xcmddc_SOURCES) $(xcmedid_SOURCES) \
-	$(xcmevents_SOURCES)
+	$(xcmevents_SOURCES) $(xcmhextobin_SOURCES)
 DIST_SOURCES = $(am__xcm_SOURCES_DIST) $(am__xcmddc_SOURCES_DIST) \
-	$(xcmedid_SOURCES) $(am__xcmevents_SOURCES_DIST)
+	$(xcmedid_SOURCES) $(am__xcmevents_SOURCES_DIST) \
+	$(xcmhextobin_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -340,6 +345,7 @@ xcmedid_LDADD = ${libXcmEDID_LIBS} -lm
 @HAVE_X11_TRUE@xcmevents_LDADD = ${libXcmX11_LIBS} ${libX11_LIBS} ${libXfixes_LIBS} \
 @HAVE_X11_TRUE@	${libXmu_LIBS} $(liboyranos_LIBS) -lm
 
+xcmhextobin_SOURCES = xcmhextobin.c
 all: all-am
 
 .SUFFIXES:
@@ -440,6 +446,10 @@ xcmevents$(EXEEXT): $(xcmevents_OBJECTS) $(xcmevents_DEPENDENCIES) $(EXTRA_xcmev
 	@rm -f xcmevents$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(xcmevents_OBJECTS) $(xcmevents_LDADD) $(LIBS)
 
+xcmhextobin$(EXEEXT): $(xcmhextobin_OBJECTS) $(xcmhextobin_DEPENDENCIES) $(EXTRA_xcmhextobin_DEPENDENCIES) 
+	@rm -f xcmhextobin$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(xcmhextobin_OBJECTS) $(xcmhextobin_LDADD) $(LIBS)
+
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
 
@@ -450,6 +460,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xcmddc.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xcmedid.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xcmevents.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xcmhextobin.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(AM_V_CC)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
