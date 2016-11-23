@@ -1,0 +1,39 @@
+.TH xcmhextobin 1 "November 22, 2016" "User Commands"
+.SH NAME
+xcmhextobin \- is a pipe converter
+.SH SYNOPSIS
+\fBxcmhextobin\fR [-s] [-f \fIPATTERN\fR] [-l \fIMAX_LENGTH\fR] [\fIHEX_FILE\fR]
+.PP 
+\fB| xcmhextobin\fR
+.fi 
+.SH DESCRIPTION
+The xcmhextobin tool converts a hexadecimal ecoding into binary data and back. It can be used as a filter to xcmedid.
+.SH EXAMPLES 
+.TP
+Convert from Hex to Binary:
+.B echo "48656C6c6f20776f726C64210a" | xcmhextobin
+.PP
+.TP
+Convert xrandr output:
+.B xrandr --props | src/xcmhextobin -sf 00ffffffffffff00 -l 128 | xcmedid --openicc
+.PP
+.TP
+Convert ArgyllCMS DB EDID value:
+.B cat ~/.config/color.jcnf | src/xcmhextobin -sf 00ffffffffffff00 -l 128 | xcmedid --openicc
+.PP
+.TP
+Convert from Binary to Hex:
+.B cat EDID.bin | xcmhextobin -r
+.PP 
+.SH AUTHOR
+Kai-Uwe Behrmann (ku.b (at) gmx.de)
+.SH COPYRIGHT
+(c) 2016, Kai-Uwe Behrmann
+.fi
+License: MIT <http://www.opensource.org/licenses/mit-license.php>
+.SH "SEE ALSO"
+xcmedid(1) libXcm(3) XcmEdidParse(3)
+.fi
+http://www.oyranos.org
+.SH "REPORTING BUGS"
+at: https://github.com/oyranos-cms/xcm/issues

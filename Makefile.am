@@ -6,7 +6,7 @@ SUBDIRS = src
 
 man_MANS = \
 	man/xcm.1 man/xcmddc.1 man/xcmedid.1 \
-	man/xcmevents.1 
+	man/xcmevents.1 man/xcmhextobin.1
 
 EXTRA_DIST = ${man_MANS} \
 	xcm_control.in \

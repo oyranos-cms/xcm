@@ -222,7 +222,7 @@ int main(int argc, char ** argv)
 
       putchar( c );
 
-      if(len && count++ > len)
+      if(len && ++count >= len)
         break;
     }
   }
