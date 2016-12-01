@@ -2,7 +2,7 @@
 .SH NAME
 xcmhextobin \- is a pipe converter
 .SH SYNOPSIS
-\fBxcmhextobin\fR [-s] [-f \fIPATTERN\fR] [-l \fIMAX_LENGTH\fR] [\fIHEX_FILE\fR]
+\fBxcmhextobin\fR [-s] [-f \fIPATTERN\fR] [-d \fINUMBER\fR] [-l \fIMAX_LENGTH\fR] [\fIHEX_FILE\fR]
 .PP 
 \fB| xcmhextobin\fR
 .fi 
@@ -14,12 +14,12 @@ Convert from Hex to Binary:
 .B echo "48656C6c6f20776f726C64210a" | xcmhextobin
 .PP
 .TP
-Convert xrandr output:
-.B xrandr --props | src/xcmhextobin -sf 00ffffffffffff00 -l 128 | xcmedid --openicc
+Convert xrandr outputs second edid:
+.B xrandr --props | xcmhextobin -sf 00ffffffffffff00 -l 128 -d 1 | xcmedid --openicc
 .PP
 .TP
 Convert ArgyllCMS DB EDID value:
-.B cat ~/.config/color.jcnf | src/xcmhextobin -sf 00ffffffffffff00 -l 128 | xcmedid --openicc
+.B cat ~/.config/color.jcnf | xcmhextobin -sf 00ffffffffffff00 -l 128 | xcmedid --openicc
 .PP
 .TP
 Convert from Binary to Hex:

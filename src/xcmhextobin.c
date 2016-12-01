@@ -1,5 +1,5 @@
-/* gcc -Wall -g hextobin.c -o hextobin */
-/* gcc -Wall -g hextobin.c -o hextobin && oyranos-monitor -clv 2>&1  | grep ^EDID: | sed s/EDID:0x// | ./hextobin | ./hextobin -r | ./hextobin | xcmedid --openicc */
+/* gcc -Wall -g xcmhextobin.c -o xcmhextobin */
+/* gcc -Wall -g xcmhextobin.c -o xcmhextobin && oyranos-monitor -clv 2>&1  | grep ^EDID: | sed s/EDID:0x// | ./hextobin | ./hextobin -r | ./hextobin | xcmedid --openicc */
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -70,7 +70,7 @@ void printfHelp(int argc, char ** argv)
   fprintf( stderr, "%s\n",                 _("Usage"));
   fprintf( stderr, "  %s\n",               _("Convert from Hex to Binary:"));
   fprintf( stderr, "      cat EDID.txt | %s\n", argv[0]);
-  fprintf( stderr, "        [-s] [-f %s] [-l %s]\n", _("PATTERN"), _("MAX_LENGTH"));
+  fprintf( stderr, "        [-s] [-f %s] [-d %s] [-l %s]\n", _("PATTERN"), _("NUMBER"), _("MAX_LENGTH"));
   fprintf( stderr, "\n");
   fprintf( stderr, "      echo \"48656C6c6f20776f726C64210a\" | %s\n", argv[0]);
   fprintf( stderr, "\n");
@@ -90,6 +90,7 @@ void printfHelp(int argc, char ** argv)
   fprintf( stderr, "        -r              %s\n", _("reverse : binary to hexadecimal"));
   fprintf( stderr, "        -s              %s\n", _("skip white space"));
   fprintf( stderr, "        -f              %s\n", _("search for pattern in hexadecimal input"));
+  fprintf( stderr, "        -d              %s\n", _("search for pattern in hexadecimal input n+1 times"));
   fprintf( stderr, "        -v              %s\n", _("verbose"));
   fprintf( stderr, "\n");
   fprintf( stderr, "\n");
@@ -106,6 +107,7 @@ int main(int argc, char ** argv)
       len = 0;
   const char * file_name = NULL,
              * hex_filter = NULL;
+  int hex_filter_pos = 0;
 
   if(argc > 1)
   {
@@ -119,6 +121,7 @@ int main(int argc, char ** argv)
             for(i = 1; pos < argc && i < strlen(argv[pos]); ++i)
             switch (argv[pos][i])
             {
+              case 'd': OY_PARSE_INT_ARG( hex_filter_pos ); break;
               case 'f': OY_PARSE_STRING_ARG( hex_filter ); break;
               case 'l': OY_PARSE_INT_ARG( len ); break;
               case 'r': hex2bin = 0; break;
@@ -200,6 +203,8 @@ int main(int argc, char ** argv)
       while(lower_in[i]) { lower_in[i] = tolower(lower_in[i]); ++i; }
 
       edid = strstr( (char*)lower_in, lower_hex_filter );
+      for(i = 0; i < hex_filter_pos && edid; ++i)
+        edid = strstr( (char*)edid+1, lower_hex_filter );
       if(verbose && edid)
         fprintf( stderr, "filter:%s\n", edid);
 
