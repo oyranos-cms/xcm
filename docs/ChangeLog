@@ -1,3 +1,25 @@
+Version xcm-0.5.4
+
+Kai-Uwe Behrmann (15):
+	* [core]: add xcmhextobin -d option
+	* [docu]: update man pages and README.md
+	* [core]: support xrand --props edid filtering
+	* [core]: add xcmhextobin pipe converter
+	* [conf]: add .gitignore to hide intermediate files
+	* [core]: add xcmedid --svg option
+	* [conf]: auto update build system
+	* [conf]: update spec file
+	* [build]: satisfy autotools for README.md file
+	* [docs]: move to separate directory
+	* [docu]: fix typo
+	* [docu]: use markdown syntax for README
+	* [core]: update to Oyranos API changes
+	* [docu]: update URL's
+	* [conf]: bump version
+
+Yaroslav Shmelev (1):
+	xcmddc: handle --identify option right way
+
 Version xcm-0.5.3
 
 Kai-Uwe Behrmann (12):
