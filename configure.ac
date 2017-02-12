@@ -1,8 +1,8 @@
 define([MAJOR],[0])
 define([MINOR],[5])
-define([MICRO],[4])
+define([MICRO],[5])
 AC_INIT([xcm], [MAJOR.MINOR.MICRO],
-         https://sourceforge.net/tracker/?group_id=177017&atid=879553,
+         https://github.com/oyranos-cms/libxcm/issues,
          xcm,
          http://www.oyranos.org)
 LIBTOOL_CURRENT=0
