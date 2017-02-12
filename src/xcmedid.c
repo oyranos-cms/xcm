@@ -56,7 +56,6 @@ int main(int argc, char ** argv)
   FILE * fp = 0;
   char * mem = 0;
   size_t size = 0, s = 0;
-  int min_args = 1;
   int print_openicc_json = 0,
       print_ppmcie = 0,
       print_svg = 0;
@@ -240,14 +239,14 @@ int main(int argc, char ** argv)
     else
       err = XcmEdidPrintString( mem, &txt, malloc );
 
-      if(err)
-        fprintf( stderr, "Error: %s (%d)\n",
-                 XcmEdidErrorToString(err), (int)size);
-      else if(txt)
-      {
-        fprintf(stdout, "%s\n", txt);
-        free(txt);
-      }
+    if(err)
+      fprintf( stderr, "Error: %s (%d)\n",
+               XcmEdidErrorToString(err), (int)size);
+    else if(txt)
+    {
+      fprintf(stdout, "%s\n", txt);
+      free(txt);
+    }
   }
 
   if(fp && fp != stdin)

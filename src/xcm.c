@@ -394,7 +394,6 @@ void TraverseXTree( Display * dpy, Window win, Window root,
   int format;
   unsigned long nitems = 0, after;
   unsigned char *data = NULL;
-  Window inf;
 
   unsigned long nRegions = 0;
   XcolorRegion * r = XcolorRegionFetch( dpy, win, &nRegions );
