@@ -74,11 +74,11 @@ void printfHelp(int argc, char ** argv)
   fprintf( stderr, "\n");
   fprintf( stderr, "      echo \"48656C6c6f20776f726C64210a\" | %s\n", argv[0]);
   fprintf( stderr, "\n");
-  fprintf( stderr, "      xrandr --props | src/xcmhextobin -sf 00ffffffffffff00 -l 128 | %s --openicc\n", argv[0]);
+  fprintf( stderr, "      xrandr --props | %s -sf 00ffffffffffff00 -l 128 | xcmedid --openicc\n", argv[0]);
   fprintf( stderr, "\n");
-  fprintf( stderr, "      cat ~/.config/color.jcnf | src/xcmhextobin -sf 00ffffffffffff00 -l 128 | %s --openicc\n", argv[0]);
+  fprintf( stderr, "      cat ~/.config/color.jcnf | %s -sf 00ffffffffffff00 -l 128 | xcmedid --openicc\n", argv[0]);
   fprintf( stderr, "\n");
-  fprintf( stderr, "      oyranos-monitor -lvd 0 -f edid 2>&1 | grep EDID: | src/xcmhextobin -sf 00ffffffffffff00 -l 128 | %s --openicc\n", argv[0]);
+  fprintf( stderr, "      oyranos-monitor -lvd 0 -f edid 2>&1 | grep EDID: | %s -sf 00ffffffffffff00 -l 128 | xcmedid --openicc\n", argv[0]);
   fprintf( stderr, "\n");
   fprintf( stderr, "  %s\n",               _("Convert from Binary to Hex:"));
   fprintf( stderr, "      cat EDID.bin | %s -r\n", argv[0]);
