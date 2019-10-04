@@ -78,7 +78,7 @@ void printfHelp(int argc, char ** argv)
   fprintf( stderr, "\n");
   fprintf( stderr, "      cat ~/.config/color.jcnf | %s -sf 00ffffffffffff00 -l 128 | xcmedid --openicc\n", argv[0]);
   fprintf( stderr, "\n");
-  fprintf( stderr, "      oyranos-monitor -lvd 0 -f edid 2>&1 | grep EDID: | %s -sf 00ffffffffffff00 -l 128 | xcmedid --openicc\n", argv[0]);
+  fprintf( stderr, "      oyranos-monitor -lvcd 0 2>&1 | grep EDID: | %s -sf 00ffffffffffff00 -l 128 | xcmedid --openicc\n", argv[0]);
   fprintf( stderr, "\n");
   fprintf( stderr, "  %s\n",               _("Convert from Binary to Hex:"));
   fprintf( stderr, "      cat EDID.bin | %s -r\n", argv[0]);
