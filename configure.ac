@@ -84,7 +84,7 @@ PKG_CHECK_EXISTS([oyranos], [
         HAVE_OY=
 ])
 else
-	AC_MSG_CHECKING([for liboyraos])
+	AC_MSG_CHECKING([for liboyranos])
 	AC_MSG_RESULT([no])
 	AM_CONDITIONAL([HAVE_OY], [false])
 	HAVE_OY=
